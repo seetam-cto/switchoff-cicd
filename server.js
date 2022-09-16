@@ -4,6 +4,7 @@ import cors from "cors"
 import mongoose from "mongoose"
 const morgan = require("morgan")
 require("dotenv").config()
+const path = require('path')
 
 const app = express()
 
@@ -14,6 +15,7 @@ mongoose
     .catch((err) => console.log("DB Connection Error: ", err))
 
 //middlewares
+app.use(express.static(path.join(__dirname, '/frontend/build')))
 app.use(cors())
 app.use(morgan("dev"))
 app.use(express.json())
