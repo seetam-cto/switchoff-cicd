@@ -18,7 +18,7 @@ jobs:
         node-version: 16
     - run: |
         npm i
-        cp /var/www/.env.test .env
+        cp /var/www/stage.switchoff.in/.env.test .env
         cd frontend
         npm i
         npm run build
