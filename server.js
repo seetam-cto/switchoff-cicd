@@ -21,7 +21,7 @@ app.use(express.json())
 
 //route middlewares
 readdirSync("./routes").map((r) => app.use("/api", require(`./routes/${r}`)))
-app.use('/', express.static(path.join(__dirname, '/frontend/build')))
+app.use('/*', express.static(path.join(__dirname, '/frontend/build')))
 
 const port = process.env.PORT || 8000
 
