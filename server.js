@@ -15,13 +15,13 @@ mongoose
     .catch((err) => console.log("DB Connection Error: ", err))
 
 //middlewares
-app.use(express.static(path.join(__dirname, '/frontend/build')))
 app.use(cors())
 app.use(morgan("dev"))
 app.use(express.json())
 
 //route middlewares
 readdirSync("./routes").map((r) => app.use("/api", require(`./routes/${r}`)))
+app.use(express.static(path.join(__dirname, '/frontend/build')))
 
 const port = process.env.PORT || 8000
 
