@@ -19,6 +19,7 @@ jobs:
     - run: |
         npm i
         cp /var/www/stage.switchoff.in/.env.test .env
+        cp .htaccess ./frontend/
         cd frontend
         npm i
         npm run build
