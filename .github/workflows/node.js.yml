@@ -20,7 +20,6 @@ jobs:
         npm i
         cp /var/www/stage.switchoff.in/.env.test .env
         cd frontend
-        cp /var/www/stage.switchoff.in/_work/switchoff-cicd/switchoff-cicd/.htaccess.test .htaccess
         npm i
         npm run build
         cd ..
