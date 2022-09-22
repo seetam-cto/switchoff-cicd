@@ -20,7 +20,7 @@ jobs:
         npm i
         cp /var/www/stage.switchoff.in/.env.test .env
         cd frontend
-        npm i
+        npm i --force
         npm run build
         cd ..
         pm2 stop 0
