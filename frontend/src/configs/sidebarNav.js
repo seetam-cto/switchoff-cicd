@@ -1,21 +1,39 @@
 const sidebarNav = [
     {
         link: '/',
-        section: 'home',
-        icon: <i className='bx bx-home-alt'></i>,
-        text: 'Home'
+        section: 'dashboard',
+        icon: <i className='bx bxs-dashboard'></i>,
+        text: 'Dashboard'
     },
     {
-        link: '/orders',
-        section: 'orders',
-        icon: <i className='bx bx-receipt' ></i>,
-        text: 'Orders'
+        link: '/bookings',
+        section: 'bookings',
+        icon: <i className='bx bx-calendar'></i>,
+        text: 'Bookings'
     },
     {
-        link: '/products',
-        section: 'products',
-        icon: <i className='bx bx-cube'></i>,
-        text: 'Products'
+        link: '/locations',
+        section: 'locations',
+        icon: <i className='bx bx-map' ></i>,
+        text: 'Locations'
+    },
+    {
+        link: '/villas',
+        section: 'villas',
+        icon: <i className='bx bx-home-smile' ></i>,
+        text: 'Villas'
+    },
+    {
+        link: '/medialibrary',
+        section: 'medialibrary',
+        icon: <i className='bx bx-image' ></i>,
+        text: 'Media'
+    },
+    {
+        link: '/blogs',
+        section: 'blogs',
+        icon: <i className='bx bx-book-content' ></i>,
+        text: 'Blogs'
     },
     {
         link: '/customers',

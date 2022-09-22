@@ -1,11 +1,13 @@
 import React from 'react'
 import './main-layout.scss'
-import { Outlet } from 'react-router-dom'
+import { Outlet, Navigate } from 'react-router-dom'
 import Sidebar from '../components/sidebar/Sidebar'
 import TopNav from '../components/topnav/TopNav'
+import { useSelector } from "react-redux";
 
 const MainLayout = () => {
-    return (
+    const {auth} = useSelector((state) => ({...state}))
+    return auth && auth.token ? (
         <>
             <Sidebar />
             <div className="main">
@@ -15,7 +17,7 @@ const MainLayout = () => {
                 </div>
             </div>
         </>
-    )
+    ) : (<Navigate to="/login" />)
 }
 
 export default MainLayout

@@ -1,12 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import './sidebar.scss'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { images } from '../../constants'
 import sidebarNav from '../../configs/sidebarNav'
+import {useDispatch} from "react-redux"
 
 const Sidebar = () => {
     const [activeIndex, setActiveIndex] = useState(0)
     const location = useLocation()
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
+    const logout = () => {
+        dispatch({
+            type: "LOGOUT",
+            payload: null
+        })
+        window.localStorage.removeItem("auth")
+        navigate("/login")
+    }
 
     useEffect(() => {
         const curPath = window.location.pathname.split('/')[1]
@@ -48,7 +60,7 @@ const Sidebar = () => {
                     <div className="sidebar__menu__item__icon">
                         <i className='bx bx-log-out'></i>
                     </div>
-                    <div className="sidebar__menu__item__txt">
+                    <div onClick={() => logout()} className="sidebar__menu__item__txt">
                         Logout
                     </div>
                 </div>
