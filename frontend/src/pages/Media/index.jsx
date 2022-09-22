@@ -71,10 +71,14 @@ const Media = () => {
         }
     }
 
+    const handleRefresh = async () => {
+        await handleUpload()
+        await loadMedia()
+    }
+
     useEffect(() => {
-        file && handleUpload()
-        loadMedia()
-    },[file])
+        file && handleRefresh()
+    })
 
     const handleUpload = async () => {
         let formData = new FormData()
@@ -149,26 +153,15 @@ const Media = () => {
                     </FileUploader>)}
                 </div>
                 <div className="files-view-wrapper">
-                    {allFiles && allFiles.map((f, i) => {
-                        if(mediaType === "all"){
-                            return (
-                                <FileBox selected={selectedFile} setSelected={setSelectedFile} findex={i} fileData={f} key={f._id} />
-                            )
-                        }else if(mediaType === "image" && (f.media_type ==="image" || f.media_type === "icon")){
-                            return (
-                                <FileBox selected={selectedFile} setSelected={setSelectedFile} findex={i} fileData={f} key={f._id} />
-                            )
-                        }else if(mediaType === "video" && f.media_type ==="video"){
-                            return (
-                                <FileBox selected={selectedFile} setSelected={setSelectedFile} findex={i} fileData={f} key={f._id} />
-                            )
-                        }
-                        else if(mediaType === "document" && f.media_type ==="document"){
-                            return (
-                                <FileBox selected={selectedFile} setSelected={setSelectedFile} findex={i} fileData={f} key={f._id} />
-                            )
-                        }
-                    })}
+                    {allFiles && allFiles.map((f, i) => (
+                        <>
+                            {(mediaType === "video" && f.media_type ==="video") && <FileBox selected={selectedFile} setSelected={setSelectedFile} findex={i} fileData={f} key={f._id} />}
+                            {(mediaType === "image" && (f.media_type ==="image" || f.media_type === "icon")) && <FileBox selected={selectedFile} setSelected={setSelectedFile} findex={i} fileData={f} key={f._id} />}
+                            {mediaType === "all" && <FileBox selected={selectedFile} setSelected={setSelectedFile} findex={i} fileData={f} key={f._id} />}
+                            {(mediaType === "document" && f.media_type ==="document") && <FileBox selected={selectedFile} setSelected={setSelectedFile} findex={i} fileData={f} key={f._id} />}
+                        </>
+                    )
+                    )}
                 </div>
             </DashboardWrapperMain>
             <DashboardWrapperRight>
@@ -184,3 +177,25 @@ const Media = () => {
 }
 
 export default Media
+
+
+// {
+//     if(mediaType === "all"){
+//         return (
+//             <FileBox selected={selectedFile} setSelected={setSelectedFile} findex={i} fileData={f} key={f._id} />
+//         )
+//     }else if(mediaType === "image" && (f.media_type ==="image" || f.media_type === "icon")){
+//         return (
+//             <FileBox selected={selectedFile} setSelected={setSelectedFile} findex={i} fileData={f} key={f._id} />
+//         )
+//     }else if(mediaType === "video" && f.media_type ==="video"){
+//         return (
+//             <FileBox selected={selectedFile} setSelected={setSelectedFile} findex={i} fileData={f} key={f._id} />
+//         )
+//     }
+//     else if(mediaType === "document" && f.media_type ==="document"){
+//         return (
+//             <FileBox selected={selectedFile} setSelected={setSelectedFile} findex={i} fileData={f} key={f._id} />
+//         )
+//     }
+// }

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react"
+import React, {useState} from "react"
 import DashboardWrapper, { DashboardWrapperMain } from "../../components/dashboard-wrapper/DashboardWrapper"
 import "./style.scss"
 import Tabs, {TabHead, Tab} from "../../components/tabs"
