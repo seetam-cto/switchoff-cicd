@@ -2,15 +2,26 @@ import React, { useEffect, useState } from "react"
 import "./style.scss"
 import "../style.scss"
 import Modal from 'react-modal';
+import { toast } from "react-toastify";
 
 const FileDetails = ({
-    handleFileDetails,
     fileDetails
 }) => {
     const [file, setFile] = useState({
         title: '',
         alt: ''
     })
+
+    const shortFile = (filename) => {
+        let file_name = filename
+        var file_ext = file_name.substring(file_name.lastIndexOf('.')+1);
+        if (file_name.length > 20){
+            file_name = file_name.substring(0,15)+'...'+ file_name.substring(file_name.lastIndexOf('.')-3, file_name.lastIndexOf('.')+1) +file_ext;
+        }
+        return file_name
+    }
+
+
     const [modalData, setModalData] = useState({
         url: '',
         type: ''
@@ -25,17 +36,30 @@ const FileDetails = ({
 
     const [modalIsOpen, setIsOpen] = useState(false);
 
-  function openModal() {
-    setIsOpen(true);
-  }
+    function openModal() {
+        setIsOpen(true);
+    }
 
-  function closeModal() {
-    setIsOpen(false);
-    setModalData({
-        url: '',
-        type: ''
-    })
-  }
+    function closeModal() {
+        setIsOpen(false);
+        setModalData({
+            url: '',
+            type: ''
+        })
+    }
+
+    const [copyState, setCopyState] = useState(false)
+
+    const copyText = (txt) => {
+        navigator.clipboard.writeText(txt)
+        setCopyState(true)
+        setTimeout(() => setCopyState(false), 1000)
+    }
+
+    const handleFileDetails = async (e) => {
+        e.preventDefault()
+        console.log("hi")
+    }
 
     useEffect(() => {
         if(fileDetails){
@@ -47,7 +71,7 @@ const FileDetails = ({
     },[fileDetails])
     return (
         <div className="form-container">
-            <form onSubmit={handleFileDetails}>
+            <form onSubmit={(e) => handleFileDetails(e)}>
                 {(fileDetails && (fileDetails.media_type === "image" || fileDetails.media_type === "icon")) && (
                     <div className="form-image">
                         <img src={fileDetails.url} alt="" />
@@ -75,6 +99,39 @@ const FileDetails = ({
                     value={file.alt}
                     onChange={(e) => setFile({alt: e.target.value})}
                     type="text" name="alt" className="form-control" />
+                </div>
+                <div className="form-group">
+                    <label className="form-label">
+                        File Path
+                    </label>
+                    <div className="form-group-copy">
+                    <input
+                    value={fileDetails && shortFile(fileDetails.url)}
+                    type="text" name="url" className="form-control" disabled/>
+                    <span
+                    onClick={() => copyText(fileDetails && fileDetails.url)}
+                    className="copy">
+                        <i class='bx bx-link'></i>
+                        {copyState && <span className="copied">Copied</span>}
+                    </span>
+                    </div>
+                </div>
+                <div className="form-group">
+                    <div className="row">
+                        <div className="col-6">
+                            <button
+                            onClick={() => toast.success("Saved")}
+                            className="form-button success">
+                                Save
+                            </button>
+                        </div>
+                        <div className="col-6">
+                            <button
+                            className="form-button danger">
+                                Delete
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 <Modal
                     isOpen={modalIsOpen}

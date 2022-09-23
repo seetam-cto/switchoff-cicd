@@ -32,15 +32,16 @@ const iconTypes = ['image/x-icon', 'image/svg+xml']
 const s3storage =  multerS3({
         s3: s3Client,
         bucket: 'switchoff-assets',
+        acl: "public-read",
         metadata: (req, file, cb) => {
             if(imageTypes.includes(file.mimetype.toString())){
-                cb(null, './media/images')
+                cb(null, '/media/images')
             }else if(videoTypes.includes(file.mimetype.toString())){
-                cb(null, './media/videos')
+                cb(null, '/media/videos')
             }else if(iconTypes.includes(file.mimetype.toString())){
-                cb(null, './media/icons')
+                cb(null, '/media/icons')
             } else {
-                cb(null, './media/documents')
+                cb(null, '/media/documents')
             }
         },
         key: (req, file, cb) => {

@@ -33,11 +33,11 @@ export const getPrivateMedia = async (req, res) => {
         let result = await Media.find({'postedBy': auth._id})
         .sort({createdAt: -1}).exec();
         if(!result) return res.status(400).send("Media files doesn't exist!")
-        const files = result.map(file => {
-            file.url = req.protocol + '://' + req.get('host') + file.url
-            return file
-        });
-        res.status(200).json(files)
+        // const files = result.map(file => {
+        //     file.url = req.protocol + '://' + req.get('host') + file.url
+        //     return file
+        // });
+        res.status(200).json(result)
     }catch(err){
         console.log(err)
         res.status(400).send("Error Fetching Media Files!")
@@ -50,7 +50,7 @@ export const uploadMedia = async (req, res) => {
     const mediaData = {
         title: req.file.originalname,
         alt: '',
-        url: '/media/' + getMediaType(req.file.mimetype.toString()) + 's/' + req.file.filename,
+        url: req.file.location,
         media_type: getMediaType(req.file.mimetype.toString()),
         postedBy: req.auth._id
     }

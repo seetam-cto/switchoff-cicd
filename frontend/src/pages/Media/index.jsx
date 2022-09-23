@@ -8,6 +8,7 @@ import FileDetails from "../../components/forms/FileDetails"
 
 import { uploadMedia, getMedia } from "../../actions/media"
 import { toast } from "react-toastify";
+import ContentLoader from 'react-content-loader'
 
 
 const fileTypes = ["JPEG", "JPG", "PNG", "SVG", "MP4", "PDF"];
@@ -41,6 +42,17 @@ const FileBox = ({fileData, selected, setSelected, findex}) => {
     )
 }
 
+const FileBoxLoading = () => (
+    <div className="files-view-wrapper-box">
+        <ContentLoader
+        viewBox="0 0 100 100">
+            {/* Only SVG shapes */}
+            <rect x="0" y="0" rx="1" ry="1" width="100" height="75" />
+            <rect x="0" y="80" rx="1" ry="1" width="100" height="25" />
+        </ContentLoader>
+    </div>
+)
+
 const Media = () => {
     //Upload
     const [uploadVisible, setUploadVisible] = useState(false)
@@ -63,9 +75,12 @@ const Media = () => {
       };
 
     const loadMedia = async () => {
+        setAllFiles([])
         try{
             let res = await getMedia(token)
-            setAllFiles(res.data)
+            setTimeout(() => {
+                setAllFiles(res.data)
+            }, 1000)
         }catch(err){
             console.log(err)
         }
@@ -76,6 +91,10 @@ const Media = () => {
         await loadMedia()
     }
 
+    useEffect(() => {
+        loadMedia()
+    },[])
+    
     useEffect(() => {
         file && handleRefresh()
     })
@@ -153,7 +172,7 @@ const Media = () => {
                     </FileUploader>)}
                 </div>
                 <div className="files-view-wrapper">
-                    {allFiles && allFiles.map((f, i) => (
+                    {allFiles && allFiles.length > 0 ? allFiles.map((f, i) => (
                         <>
                             {(mediaType === "video" && f.media_type ==="video") && <FileBox selected={selectedFile} setSelected={setSelectedFile} findex={i} fileData={f} key={f._id} />}
                             {(mediaType === "image" && (f.media_type ==="image" || f.media_type === "icon")) && <FileBox selected={selectedFile} setSelected={setSelectedFile} findex={i} fileData={f} key={f._id} />}
@@ -161,7 +180,9 @@ const Media = () => {
                             {(mediaType === "document" && f.media_type ==="document") && <FileBox selected={selectedFile} setSelected={setSelectedFile} findex={i} fileData={f} key={f._id} />}
                         </>
                     )
-                    )}
+                    ) : 
+                        [1,2,3,4,5,6].map((k) => <FileBoxLoading />)
+                    }
                 </div>
             </DashboardWrapperMain>
             <DashboardWrapperRight>
