@@ -10,14 +10,7 @@
 /coverage
 
 # static folders
-/media/documents/*
-!/media/documents/.gitkeep
-/media/icons/*
-!/media/icons/.gitkeep
-/media/images/*
-!/media/images/.gitkeep
-/media/videos/*
-!/media/videos/.gitkeep
+/media
 
 # production
 /build
