@@ -4,7 +4,7 @@ import { getLocations, addLocation, updateLocation, deleteLocation } from "../co
 
 const router = express.Router()
 
-router.get("/locations", getLocations)
+router.get("/locations/:type", getLocations)
 router.post("/locations/add", requireSignIn, addLocation)
 router.put("/locations/update/:id", requireSignIn, updateLocation)
 router.delete("/locations/delete/:id", requireSignIn, deleteLocation)

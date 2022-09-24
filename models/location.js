@@ -1,5 +1,6 @@
 import mongoose from "mongoose"
 const {Schema} = mongoose
+const {ObjectId} = mongoose.Schema
 
 const locationSchema = new Schema({
     name: {
@@ -10,10 +11,16 @@ const locationSchema = new Schema({
         maxlength: 200
     },
     icon: {
-        type: String
+        type: ObjectId,
+        ref: "Media"
     },
     cover_image: {
-        type: String
+        type: ObjectId,
+        ref: "Media"
+    },
+    parent: {
+        type: ObjectId,
+        ref: "Location"
     },
     location_type: {
         type: String,

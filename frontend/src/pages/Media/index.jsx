@@ -10,7 +10,6 @@ import { uploadMedia, getMedia } from "../../actions/media"
 import { toast } from "react-toastify";
 import ContentLoader from 'react-content-loader'
 
-
 const fileTypes = ["JPEG", "JPG", "PNG", "SVG", "MP4", "PDF"];
 
 const ShortFileSpan = ({filename}) => {
@@ -53,7 +52,7 @@ const FileBoxLoading = () => (
     </div>
 )
 
-const Media = () => {
+const Media = ({popup = false, selectedMedia = null, setSelectedMedia = null}) => {
     //Upload
     const [uploadVisible, setUploadVisible] = useState(false)
     const [file, setFile] = useState(null);
