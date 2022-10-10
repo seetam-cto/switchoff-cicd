@@ -1,0 +1,41 @@
+@use '../../../scss/abstracts/' as *;
+
+.country{
+    position: relative;
+    .no-autocomplete {
+        color: #999;
+        padding: 8px;
+    }
+    .autocomplete {
+        border: 1px solid #999;
+        border-top-width: 0;
+        list-style: none;
+        margin-top: 0;
+        max-height: 200px;
+        overflow-y: auto;
+        padding-left: 0;
+        width: 100%;
+        position: absolute;
+        left: 0;
+        top: 40px;
+        background-color: $white;
+        border-radius: 10px;
+        &::-webkit-scrollbar{
+            display: none;
+        }
+      }
+      .autocomplete li {
+        padding: 4px 8px;
+        font-size: 16px;
+      }
+      .autocomplete > .active,
+      .autocomplete li:hover {
+        background-color: $red;
+        cursor: pointer;
+        font-weight: 600;
+        color: $white;
+      }
+      .autocomplete li:not(:last-of-type) {
+        border-bottom: 1px solid #999;
+      }
+}

@@ -3,7 +3,7 @@ import React from "react"
 
 export const Tab = props => {
     return (
-        <div className="tab-wrapper-main">
+        <div className={`tab-wrapper-main ${props.className}`}>
             {props.children}
         </div>
     )

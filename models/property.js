@@ -29,11 +29,11 @@ const propertySchema = new Schema({
             full_address: {
                 type: String
             },
+            pincode: String,
             map: {
                 lat: String,
                 lon: String
             }
-
         },
         property_type: {
             type: ObjectId,
@@ -54,25 +54,22 @@ const propertySchema = new Schema({
             }
         },
     },
-    ameneties: [{
+    amenities: [{
         type: ObjectId,
         ref: "Amenity"
     }],
     gallary: {
-        images: [{
-            type: ObjectId,
-            ref: "Media"
-        }],
-        image_dimentions: {
-            width: String,
-            height: String
+        cover_image: {
+            type: String
         },
+        images: [{
+            type: String
+        }],
         external_video: {
             type: String
         },
         videos: [{
-            type: ObjectId,
-            ref: "Media"
+            type: String
         }]
     },
     policies: {
@@ -85,15 +82,17 @@ const propertySchema = new Schema({
         },
         extras: [{
             policy_name: String,
-            charges: String
+            charges: {
+                type: String,
+                default: 0
+            }
         }],
     },
-    documents_vault: {
+    documents: {
         gst_info: {
             gst_no: String,
             gst_proof: {
-                type: ObjectId,
-                ref: "Media"
+                type: String
             },
             verified: {
                 type: Boolean,
@@ -104,8 +103,7 @@ const propertySchema = new Schema({
             id_type: String,
             id_no: String,
             id_proof: {
-                type: ObjectId,
-                ref: "Media"
+                type: String,
             },
             verified: {
                 type: Boolean,
@@ -115,8 +113,7 @@ const propertySchema = new Schema({
         contract: {
             contract_id: String,
             contract_pdf: {
-                type: ObjectId,
-                ref: "Media"
+                type: String
             }
         },
         comment: String,
@@ -125,6 +122,6 @@ const propertySchema = new Schema({
         type: ObjectId,
         ref: "User"
     }
-})
+}, {timestamps: true})
 
 export default mongoose.model("Property", propertySchema)

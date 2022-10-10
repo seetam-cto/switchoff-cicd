@@ -3,12 +3,15 @@ const {Schema} = mongoose
 const {ObjectId} = mongoose.Schema
 
 const amenitySchema = new Schema({
-    name: {
+    title: {
         type: String
     },
-    about: {
-        type: String,
-        maxlength: 200
+    for: {
+        type: String
+    },
+    exclusive: {
+        type: Boolean,
+        default: false
     },
     icon: {
         type: String 
@@ -18,5 +21,7 @@ const amenitySchema = new Schema({
         ref: "User"
     }
 }, {timestamps: true})
+
+amenitySchema.index({name: 1, for: 1}, {unique: true})
 
 export default mongoose.model("Amenity", amenitySchema)

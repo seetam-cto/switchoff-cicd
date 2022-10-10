@@ -3,7 +3,14 @@ import Location from "../models/location";
 export const getLocations = async (req, res) => {
     const location_type = req.params.type
     try{
-        let locations = await Location.find({location_type: location_type}).exec()
+        let locations = [];
+        if(location_type === "state"){
+            locations = await Location.find({location_type: location_type})
+            .populate("parent")
+            .exec()
+        }else{
+            locations = await Location.find({location_type: location_type}).exec()
+        }
         if(!locations) return res.status(400).send("No Locations Found!")
         res.status(200).json(locations)
     }catch(err){
@@ -14,30 +21,21 @@ export const getLocations = async (req, res) => {
 
 export const addLocation = async (req, res) => {
     let {auth, body} = req
-    let {
-        name, about,
-        icon, cover_image,
-        location_type, lat, lon
-    } = body;
+    console.log(body)
     const locData = {
-        name,
-        about,
-        icon,
-        cover_image,
-        location_type,
-        lat_lon: {
-            lat: lat,
-            lon: lon
-        },
+        ...body,
         createdBy: auth._id
     }
     const location = new Location(locData)
     try{
-        await Location.bulkSave()
+        await location.save()
         return res.status(200).json(location)
     }catch(err){
-        console.log(err)
-        res.status(400).send("Couldn't add Location!")
+        if(err.code == 11000){
+            res.status(400).send("Country Already Exists")
+        }else{
+            res.status(400).send("Couldn't add Location!")
+        }
     }
 } 
 

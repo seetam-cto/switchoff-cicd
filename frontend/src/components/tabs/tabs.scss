@@ -3,13 +3,13 @@
 .tab{
     &-wrapper{
         width: 100%;
-        height: 100%;
+        height: auto;
         padding-block: $spacing;
         &-main{
             width: 100%;
-            height: 100%;
+            height: auto;
             padding: 20px;
-            background-color: $white;
+            margin-bottom: 20px;
             border-radius: $borderRadius;
         }
     }

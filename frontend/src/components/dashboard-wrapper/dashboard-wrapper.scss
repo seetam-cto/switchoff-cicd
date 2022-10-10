@@ -8,8 +8,28 @@
 
     &__main {
         flex-grow: 1;
-        padding-right: $sideBarWidth;
+        margin-right: $sideBarWidth - 20px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        padding-right: 20px;
+        box-sizing: border-box;
+        max-height: 80vh;
+        height: 100%;
+        &::-webkit-scrollbar{
+            width: 10px;
+            border-radius: 10px;
+            background-color: transparent;
+            &-track{
+                background-color: #33333350;
+                border-radius: 10px;
+            }
+            &-thumb{
+                height: 100px;
+                background-color: $black;
+                border-radius: 10px;
 
+            }
+        }
         @include tablet {
             padding-right: 0;
         }

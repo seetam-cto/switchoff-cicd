@@ -18,10 +18,16 @@ const sidebarNav = [
         text: 'Locations'
     },
     {
-        link: '/villas',
-        section: 'villas',
+        link: '/attributes',
+        section: 'attributes',
+        icon: <i class='bx bx-category'></i>,
+        text: 'Attributes'
+    },
+    {
+        link: '/properties',
+        section: 'properties',
         icon: <i className='bx bx-home-smile' ></i>,
-        text: 'Villas'
+        text: 'Properties'
     },
     {
         link: '/medialibrary',

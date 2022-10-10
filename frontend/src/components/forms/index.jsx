@@ -52,3 +52,15 @@ export const LocationForm = ({
         
     </div>
 )
+
+export const CheckBox = ({value, setValue}) => {
+    return (
+        <div className="form-group-h">
+            <input type="checkbox"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            checked={value} className="form-control" />
+        </div>
+    )
+}
+

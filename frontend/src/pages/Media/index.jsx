@@ -10,7 +10,7 @@ import { uploadMedia, getMedia } from "../../actions/media"
 import { toast } from "react-toastify";
 import ContentLoader from 'react-content-loader'
 
-const fileTypes = ["JPEG", "JPG", "PNG", "SVG", "MP4", "PDF"];
+const fileTypes = ["JPEG", "JPG", "PNG", "MP4", "PDF"];
 
 const ShortFileSpan = ({filename}) => {
     let file_name = filename
@@ -52,7 +52,7 @@ const FileBoxLoading = () => (
     </div>
 )
 
-const Media = ({popup = false, selectedMedia = null, setSelectedMedia = null}) => {
+const Media = () => {
     //Upload
     const [uploadVisible, setUploadVisible] = useState(false)
     const [file, setFile] = useState(null);
@@ -166,7 +166,7 @@ const Media = ({popup = false, selectedMedia = null, setSelectedMedia = null}) =
                         <div className="files-upload-area">
                             <i className='bx bxs-image-add' ></i>
                             <span>Upload or drop file right here!</span>
-                            <h6>Only JPEG, PNG, SVG, MP4 and PDF allowed!</h6>
+                            <h6>Only JPEG, PNG, MP4 and PDF allowed!</h6>
                         </div>
                     </FileUploader>)}
                 </div>
