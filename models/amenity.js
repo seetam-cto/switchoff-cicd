@@ -22,6 +22,6 @@ const amenitySchema = new Schema({
     }
 }, {timestamps: true})
 
-amenitySchema.index({name: 1, for: 1}, {unique: true})
+amenitySchema.index({title: 1, for: 1}, {unique: true})
 
 export default mongoose.model("Amenity", amenitySchema)

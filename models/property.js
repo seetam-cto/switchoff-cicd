@@ -15,16 +15,13 @@ const propertySchema = new Schema({
         },
         address: {
             region: {
-                type: ObjectId,
-                ref: "Location"
+                type: String
             },
             country: {
-                type: ObjectId,
-                ref: "Location"
+                type: String
             },
             state: {
-                type: ObjectId,
-                ref: "Location"
+                type: String
             },
             full_address: {
                 type: String
@@ -32,7 +29,7 @@ const propertySchema = new Schema({
             pincode: String,
             map: {
                 lat: String,
-                lon: String
+                lng: String
             }
         },
         property_type: {
@@ -58,7 +55,7 @@ const propertySchema = new Schema({
         type: ObjectId,
         ref: "Amenity"
     }],
-    gallary: {
+    gallery: {
         cover_image: {
             type: String
         },
@@ -80,13 +77,8 @@ const propertySchema = new Schema({
             check_in: String,
             check_out: String
         },
-        extras: [{
-            policy_name: String,
-            charges: {
-                type: String,
-                default: 0
-            }
-        }],
+        pets: Boolean,
+        extra_charges: Number
     },
     documents: {
         gst_info: {
@@ -118,10 +110,16 @@ const propertySchema = new Schema({
         },
         comment: String,
     },
+    step: {
+        type: Number
+    },
+    status: Boolean,
     createdBy: {
         type: ObjectId,
         ref: "User"
     }
 }, {timestamps: true})
+
+propertySchema.index({basic_info: 1}, {unique: true})
 
 export default mongoose.model("Property", propertySchema)

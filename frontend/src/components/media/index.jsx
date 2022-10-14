@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import ContentLoader from 'react-content-loader'
 const placeImg = "https://placehold.jp/30/a8a8a8/ffffff/300x150.png?text="
 
-const fileTypes = ["JPEG", "JPG", "PNG", "SVG", "MP4", "PDF"];
+const fileTypes = ["JPEG", "JPG", "PNG", "PDF"];
 const onlyIcon = ["PNG"]
 
 const ShortFileSpan = ({filename}) => {
@@ -136,6 +136,16 @@ const MediaHandler = ({media, setSelectedMedia, modalState, setModalState, modal
             setSelectedMedia({...media, icon: allFiles[selectedFile] && allFiles[selectedFile].url });
         }else if(modalFor === "EXPERIENCE_ICON"){
             setSelectedMedia({...media, icon: allFiles[selectedFile] && allFiles[selectedFile].url });
+        }else if(modalFor === "PROPERTY_COVER"){
+            setSelectedMedia({...media, cover_image: allFiles[selectedFile] && allFiles[selectedFile].url });
+        }else if(modalFor === "PROPERTY_GALLERY"){
+            if(media.images.includes(allFiles[selectedFile] && allFiles[selectedFile].url)){
+                toast.error("Image already added!")
+            }else if(allFiles[selectedFile] && media.cover_image === allFiles[selectedFile].url){
+                toast.error("Image cant be same as Cover!")
+            }else{
+                setSelectedMedia({...media, images: [...media.images, allFiles[selectedFile] && allFiles[selectedFile].url] });
+            }
         }
         clearModal('')
         closeModal()

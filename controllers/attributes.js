@@ -80,6 +80,7 @@ export const addAmenity = async (req, res) => {
         await amenity.save()
         return res.status(200).json(amenity)
     }catch(err){
+        console.log(err)
         if(err.code == 11000){
             res.status(400).send("Amenity already Exists")
         }else{
