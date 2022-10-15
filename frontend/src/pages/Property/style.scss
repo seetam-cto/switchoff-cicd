@@ -125,10 +125,36 @@
             }
             &:last-child{
                 border: none;
+                padding-inline: 10px;
             }
             &.title{
                 font-weight: 600;
                 font-size: 16px;
+            }
+            &-button{
+                width: fit-content;
+                padding: 6px 10px;
+                border-radius: 10px;
+                border: 1px solid #00000020;
+                font-size: 20px;
+                display: flex;
+                align-items: center;
+                font-size: 12px;
+                i{
+                    font-size: 15px;
+                    margin-right: 5px;
+                }
+                cursor: pointer;
+                &:hover{
+                    box-shadow: inset 0px 2px 5px #00000030;
+                    text-shadow: 0px 2px 5px #00000030;
+                }
+                &.edit{
+                    color: #557cff;
+                }
+                &.delete{
+                    color: $red;
+                }
             }
             &-tag{
                 color: $white;

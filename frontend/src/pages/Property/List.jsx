@@ -96,12 +96,7 @@ const ListProperty = () => {
                                 {ppt.createdBy.name}
                             </div>
                             <div className="col-2 property-list-body d-flex justify-between">
-                                <button className="form-button bg-blue">
-                                    <i class='bx bxs-pencil' ></i>
-                                </button>
-                                <button className="form-button bg-red">
-                                    <i class='bx bxs-trash' ></i>
-                                </button>
+                                
                             </div>
                         </div>
                     ))
