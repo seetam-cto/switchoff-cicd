@@ -3,6 +3,7 @@ import Property from "../models/property"
 export const getProperties = async (req, res) => {
     try{
         let properties = await Property.find()
+        .populate("createdBy")
             .exec();
         if(!properties) return res.status(400).send("No Properties Found!")
         res.status(200).json(properties)

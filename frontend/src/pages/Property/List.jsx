@@ -3,6 +3,17 @@ import "./style.scss"
 import { useSelector } from "react-redux";
 import { getProperties } from '../../actions/property';
 
+const POCBox = ({poc_info}) => {
+    return (
+        <div className="property-poc">
+            <p className="property-poc-name"><i class='bx bxs-user' ></i>&nbsp;{poc_info.name}</p>
+            <a className="property-poc-phone" href={`tel:+${poc_info.phone}`}>
+            <i class='bx bxs-phone' ></i>&nbsp;{poc_info.phone}
+            </a>
+        </div>
+    )
+}
+
 const ListProperty = () => {
     const [properties, setProperties] = useState([])
     const {auth} = useSelector((state) => ({...state}))
@@ -53,36 +64,44 @@ const ListProperty = () => {
                     <div className="col-1 property-list-head">
                         #
                     </div>
-                    <div className="col-5 property-list-head">
+                    <div className="col-4 property-list-head">
                         Property
                     </div>
                     <div className="col-2 property-list-head">
-                        Revenue
+                        POC
                     </div>
                     <div className="col-2 property-list-head">
-                        Bookings
+                        Posted By
                     </div>
-                    <div className="col-2 property-list-head">
+                    <div className="col-3 property-list-head">
                         Actions
                     </div>
                 </div>
                 {
                     properties && properties.map((ppt, i) => (
-                        <div className="row attr-list-li">
-                            <div className="col-1 attr-list-body">
+                        <div className="row property-list-li">
+                            <div className="col-1 property-list-body">
                                 {i+1}
                             </div>
-                            <div className="col-4 attr-list-body">
-                                {ppt.basic_info.name}
+                            <div className="col-4 property-list-body title">
+                                {(ppt.basic_info.name.length > 20) ? ppt.basic_info.name.substring(0,17) + "..." : ppt.basic_info.name }
+                                {ppt.status 
+                                    ? <> - <span className="property-list-body-tag published">Published</span></>
+                                    : <> - <span className="property-list-body-tag draft">Completed {((ppt.step)/5)*100}%</span></>}
                             </div>
-                            <div className="col-2 attr-list-body">
-                                {ppt.basic_info.poc_info.name}
+                            <div className="col-2 property-list-body">
+                                <POCBox poc_info={ppt.basic_info.poc_info}/>
                             </div>
-                            <div className="col-2 attr-list-body">
-                                <img src={ppt.gallery.cover_image} alt="" />
+                            <div className="col-2 property-list-body">
+                                {ppt.createdBy.name}
                             </div>
-                            <div className="col-3 attr-list-body">
-                                Edit/Delete
+                            <div className="col-3 property-list-body d-flex justify-between">
+                                <button className="form-button bg-blue">
+                                    <i class='bx bxs-pencil' ></i>&nbsp;Edit
+                                </button>
+                                <button className="form-button bg-red">
+                                    <i class='bx bxs-trash' ></i>
+                                </button>
                             </div>
                         </div>
                     ))

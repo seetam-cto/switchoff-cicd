@@ -126,6 +126,22 @@
             &:last-child{
                 border: none;
             }
+            &.title{
+                font-weight: 600;
+                font-size: 16px;
+            }
+            &-tag{
+                color: $white;
+                font-size: 12px;
+                padding: 2px 10px;
+                border-radius: 5px;
+                &.draft{
+                    background-color: rgb(88, 88, 88);
+                }
+                &.published{
+                    background-color: $green;
+                }
+            }
         }
     }
     &-map{
@@ -210,6 +226,19 @@
             i{
                 font-size: 24px;
             }
+        }
+    }
+    &-poc{
+        display: flex;
+        flex-direction: column;
+        &-name{
+            font-weight: 600;
+            color: $black;
+        }
+        &-phone{
+            display: flex;
+            align-items: center;
+            color: $purple;
         }
     }
 }
