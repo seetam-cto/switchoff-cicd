@@ -64,7 +64,7 @@ const ListProperty = () => {
                     <div className="col-1 property-list-head">
                         #
                     </div>
-                    <div className="col-4 property-list-head">
+                    <div className="col-5 property-list-head">
                         Property
                     </div>
                     <div className="col-2 property-list-head">
@@ -73,7 +73,7 @@ const ListProperty = () => {
                     <div className="col-2 property-list-head">
                         Posted By
                     </div>
-                    <div className="col-3 property-list-head">
+                    <div className="col-2 property-list-head">
                         Actions
                     </div>
                 </div>
@@ -83,7 +83,7 @@ const ListProperty = () => {
                             <div className="col-1 property-list-body">
                                 {i+1}
                             </div>
-                            <div className="col-4 property-list-body title">
+                            <div className="col-5 property-list-body title">
                                 {(ppt.basic_info.name.length > 20) ? ppt.basic_info.name.substring(0,17) + "..." : ppt.basic_info.name }
                                 {ppt.status 
                                     ? <> - <span className="property-list-body-tag published">Published</span></>
@@ -95,9 +95,9 @@ const ListProperty = () => {
                             <div className="col-2 property-list-body">
                                 {ppt.createdBy.name}
                             </div>
-                            <div className="col-3 property-list-body d-flex justify-between">
+                            <div className="col-2 property-list-body d-flex justify-between">
                                 <button className="form-button bg-blue">
-                                    <i class='bx bxs-pencil' ></i>&nbsp;Edit
+                                    <i class='bx bxs-pencil' ></i>
                                 </button>
                                 <button className="form-button bg-red">
                                     <i class='bx bxs-trash' ></i>
