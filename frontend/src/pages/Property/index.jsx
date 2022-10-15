@@ -23,16 +23,17 @@ const Property = () => {
                     <h3>Manage Attributes</h3>
                     <p>&nbsp;</p>
                     <ul className="attr-right-menu">
-                        {activeIndex === "add" && <li>
+                        {activeIndex === "add" ? <li>
                             <Link to={"/properties/"}>
                                 <i class={`bx bx${activeIndex === "add" ? 's' : ''}-left-arrow-alt`}></i> &nbsp;Back
                             </Link>
-                        </li>}
+                        </li> : 
                         <li className={`active`}>
                             <Link to={"/properties/add"}>
                                 <i class={`bx bx${activeIndex === "add" ? '-left-arrow-alt' : '-plus-circle'}`}></i> &nbsp;Add Property
                             </Link>
                         </li>
+                        }
                     </ul>
                 </div>
             </DashboardWrapperRight>

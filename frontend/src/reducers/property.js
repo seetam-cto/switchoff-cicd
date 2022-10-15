@@ -59,11 +59,24 @@ let propertyState = {
     _id: ''
 };
 
+let propCompletedStage = 0;
+
 export const propertyReducer = (state = {...propertyState}, action) => {
     switch(action.type){
         case "PROPERTY_UPDATE":
             return {...state, ...action.payload};
         case "PROPERTY_CLEAR":
+            return action.payload;
+        default:
+            return state;
+    }
+}
+
+export const propertyAddStageReducer = (state = {...propCompletedStage}, action) => {
+    switch(action.type){
+        case "PROPERTY_ADD_STATE":
+            return {...state, ...action.payload};
+        case "PROPERTY_ADD_CLEAR":
             return action.payload;
         default:
             return state;

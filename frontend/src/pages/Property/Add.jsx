@@ -75,7 +75,7 @@ const propertyStructure = {
     _id: ''
 };
 
-const BasicInfo = ({data, setData, step, handleSave}) => {
+const BasicInfo = ({data, setData, step, handleSave, complete}) => {
     const [propertyTypes, setPropertyTypes] = useState([])
     const [experiences, setExperiences] = useState([])
     const [aboutChar, setAboutChar] = useState(300)
@@ -143,6 +143,7 @@ const BasicInfo = ({data, setData, step, handleSave}) => {
                         placeholder="e.g. Taj Resort"
                         onChange={(e) => setData({...data, name: e.target.value})}
                         required
+                        disabled={complete}
                         className="form-control" />
                     </div>
                 </div>
@@ -154,6 +155,7 @@ const BasicInfo = ({data, setData, step, handleSave}) => {
                         <select
                         onChange={(e) => setData({...data, property_type: e.target.value})}
                         required
+                        disabled={complete}
                         className="form-control">
                             <option value="">Select Property Type</option>
                             {propertyTypes.map((p, i) => (
@@ -175,6 +177,7 @@ const BasicInfo = ({data, setData, step, handleSave}) => {
                         value={data.poc_info.name}
                         placeholder="e.g Manager/Owners Name"
                         required
+                        disabled={complete}
                         onChange={(e) =>  setData({...data, poc_info: {...data.poc_info,name: e.target.value}})}
                         className="form-control" />
                     </div>
@@ -188,6 +191,7 @@ const BasicInfo = ({data, setData, step, handleSave}) => {
                         value={data.poc_info.phone}
                         placeholder="e.g +91 99999 99999"
                         required
+                        disabled={complete}
                         onChange={(e) =>  setData({...data, poc_info: {...data.poc_info,phone: e.target.value}})}
                         className="form-control" />
                     </div>    
@@ -203,6 +207,7 @@ const BasicInfo = ({data, setData, step, handleSave}) => {
                     placeholder="Try to keep it under 300 characters"
                     value={data.content}
                     required
+                    disabled={complete}
                     onChange={(e) => {setData({...data, content: e.target.value}); setAboutChar(e.target.value.length)}}
                     className="form-control ta" />
                 </div>
