@@ -4,6 +4,9 @@ import axios from "axios"
 export const getProperties = async () => 
     await axios.get(`${process.env.REACT_APP_API}/properties`)
 
+export const getProperty = async (id) => 
+    await axios.get(`${process.env.REACT_APP_API}/property/${id}`)
+
 export const addProperty = async (token, property) =>
     await axios.post(`${process.env.REACT_APP_API}/properties/add`, property, {
         headers: {

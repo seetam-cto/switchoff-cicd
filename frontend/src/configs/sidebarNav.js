@@ -20,7 +20,7 @@ const sidebarNav = [
     {
         link: '/attributes',
         section: 'attributes',
-        icon: <i class='bx bx-category'></i>,
+        icon: <i className='bx bx-category'></i>,
         text: 'Attributes'
     },
     {

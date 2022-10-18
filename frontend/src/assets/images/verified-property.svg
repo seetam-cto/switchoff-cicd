@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="40.146" height="48" viewBox="0 0 40.146 48">
+  <g id="verified-property" transform="translate(-187.324 -412.644)">
+    <path id="Path_190" data-name="Path 190" d="M210.277,131.385v-6.371a.825.825,0,0,0-.873-.873H195.876a.825.825,0,0,0-.873.873v6.371a.825.825,0,0,0,.873.873H209.4A.874.874,0,0,0,210.277,131.385Zm-1.746-.872H196.749v-4.625h11.782Zm3.578,21.294V122.135H193.084v29.673h-1.745V121.262a.825.825,0,0,1,.873-.873h20.771a.825.825,0,0,1,.873.873v30.545Zm-5.934,0V141.072h-7.244v10.735h-1.745V140.2a.825.825,0,0,1,.873-.873h8.989a.825.825,0,0,1,.873.873v11.607Zm11.694,2.618a.825.825,0,0,1-.873.873H188.2a.873.873,0,0,1,0-1.746h28.887a.806.806,0,0,1,.785.873Z" transform="translate(0 305.346)" fill="#989898"/>
+    <g id="Group_1082" data-name="Group 1082" transform="translate(202.928 412.644)">
+      <rect id="Rectangle_138" data-name="Rectangle 138" width="21.035" height="21.035" rx="7" transform="translate(1.751 1.753)" fill="#fff"/>
+      <g id="Boundary" fill="#fff" stroke="rgba(0,0,0,0)" stroke-width="1" opacity="0">
+        <rect width="24.541" height="24.541" stroke="none"/>
+        <rect x="0.5" y="0.5" width="23.541" height="23.541" fill="none"/>
+      </g>
+    </g>
+    <g id="MDI_check-circle" data-name="MDI / check-circle" transform="translate(204.71 414.269)">
+      <path id="Path_check-circle" data-name="Path / check-circle" d="M12.567,2A10.567,10.567,0,1,0,23.134,12.567,10.6,10.6,0,0,0,12.567,2M10.454,17.85,5.17,12.567l1.49-1.49,3.794,3.783,8.02-8.02,1.49,1.5Z" transform="translate(-2 -2)" fill="#36c583"/>
+    </g>
+  </g>
+</svg>

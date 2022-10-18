@@ -13,6 +13,20 @@ export const getProperties = async (req, res) => {
     }
 }
 
+export const getProperty = async (req, res) => {
+    try{
+        let properties = await Property.findById(req.params.propertyId)
+        .populate("basic_info.experience_tags")
+        .populate("amenities")
+        .exec();
+        if(!properties) return res.status(400).send("No Properties Found!")
+        res.status(200).json(properties)
+    }catch(err){
+        console.log(err)
+        res.status(200).send("Error in Fetching Properties")
+    }
+}
+
 export const addProperty = async (req, res) => {
     let {auth, body} = req
     console.log(body)

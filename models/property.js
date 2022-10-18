@@ -70,9 +70,14 @@ const propertySchema = new Schema({
         }]
     },
     policies: {
-        cancellation: [{
+        all: [{
+            policyType: String,
+            policy: String,
+        }],
+        others: [{
             type: String
         }],
+        couple_friendly: Boolean,
         check_time: {
             check_in: String,
             check_out: String
@@ -114,6 +119,10 @@ const propertySchema = new Schema({
         type: Number
     },
     status: Boolean,
+    trash: {
+        type: Boolean,
+        default: false
+    },
     createdBy: {
         type: ObjectId,
         ref: "User"

@@ -8,6 +8,10 @@ import MainLayout from './layout/MainLayout'
 import Login from './pages/Login'
 import {ToastContainer} from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
+//pages
 import Media from './pages/Media'
 import Attributes, {AttribbutesStats} from './pages/Attribbutes'
 import PropType from './pages/Attribbutes/PropType'
@@ -17,6 +21,10 @@ import Property from './pages/Property'
 import AddProperty from './pages/Property/Add'
 import UpdateProperty from './pages/Property/Update'
 import ListProperty from './pages/Property/List'
+import Preview from './pages/Property/Preview'
+import CalendarView from './pages/Property/Calendar'
+
+
 
 function App() {
     return (
@@ -35,7 +43,9 @@ function App() {
                     <Route path="properties" element={<Property />}>
                         <Route index element={<ListProperty />} />
                         <Route path="add" element={<AddProperty />} />
-                        <Route path="update" element={<UpdateProperty />} />
+                        <Route path="update/:propertyId" element={<UpdateProperty />} />
+                        <Route path="preview/:propertyId" element={<Preview />} />
+                        <Route path="calendar/:propertyId" element={<CalendarView />} />
                     </Route>
                     <Route path="medialibrary" element={<Media />} />
                     <Route path="bookings" element={<Blank />} />

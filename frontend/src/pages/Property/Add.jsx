@@ -444,7 +444,7 @@ const Location = ({address, setAddress, step, handleSave}) => {
                     className="form-control map"
                     loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"
-                    src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBtB0H3LUpHoVHg1QGlSoEonWjcesiXUR0&q=${!notFound && location && location.full ? location.full.replace(",","+").replace(" ","").replace("&", "and"): (location.map.lat+','+location.map.lon)}`}>
+                    src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBtB0H3LUpHoVHg1QGlSoEonWjcesiXUR0&q=${!notFound && location && location.full_address ? location.full_address.replace(",","+").replace(" ","").replace("&", "and"): (location.map.lat+','+location.map.lon)}`}>
                     </iframe>)}
                 </div>
                 </div>

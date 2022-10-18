@@ -4,14 +4,78 @@ import { getPropertyTypes, getExperiences, getAmenities } from '../../actions/at
 import { MultiSelect } from "react-multi-select-component";
 import AutoComplete from './Map';
 import { State } from 'country-state-city';
-import { GMapify } from  'g-mapify';
+import GoogleMapReact from 'google-map-react'
 import  'g-mapify/dist/index.css';
 import MediaHandler from '../../components/media';
 import ReactPlayer from 'react-player'
 import { toast } from 'react-toastify';
+import { addProperty, getProperty, updateProperty } from '../../actions/property';
+import {useDispatch, useSelector} from "react-redux"
+import { useNavigate, useParams } from 'react-router-dom';
 const placeImg = "https://placehold.jp/30/a8a8a8/ffffff/300x150.png?text="
 
-const BasicInfo = ({data, setData}) => {
+const propertyStructure = {
+    basic_info: {
+        name: '',
+        content: '',
+        property_type:  '',
+        experience_tags: [],
+        poc_info: {
+            name: '',
+            phone: ''
+        },
+        address: {
+            region: '',
+            country: '',
+            state: '',
+            full_address: '',
+            pincode: '',
+            map: {
+                lat: '',
+                lng: ''
+            }
+        }
+    },
+    amenities: [],
+    gallery: {
+        cover_image: '',
+        images: [],
+        external_video: '',
+        videos: []
+    },
+    policies: {
+        cancellation: [],
+        check_time: {
+            check_in: '',
+            check_out: ''
+        },
+        pets: false,
+        extra_charges: 0
+    },
+    documents: {
+        gst_info: {
+            gst_no: '',
+            gst_proof: '',
+            verified: false,
+        },
+        poc_id: {
+            id_type: '',
+            id_no: '',
+            id_proof: '',
+            verified: false
+        },
+        contract: {
+            contract_id: '',
+            contract_pdf: ''
+        },
+        comment: ''
+    },
+    step: 0,
+    createdBy: '',
+    _id: ''
+};
+
+const BasicInfo = ({data, setData, step, handleSave, complete}) => {
     const [propertyTypes, setPropertyTypes] = useState([])
     const [experiences, setExperiences] = useState([])
     const [aboutChar, setAboutChar] = useState(300)
@@ -52,10 +116,15 @@ const BasicInfo = ({data, setData}) => {
         loadExperiences()
     },[])
 
+    const handleAdd = async (e) => {
+        e.preventDefault()
+
+    }
+
     useEffect(() => {
         console.log(data.experience_tags)
-        let opss = []  
-        experiences.map((exps) => data.experience_tags.includes(exps.value) && opss.push(exps))
+        let opss = []
+        experiences && experiences.map((exps) => data.experience_tags.includes(exps.value) && opss.push(exps))
         setSelected(opss)
     },[experiences])
     return (
@@ -73,6 +142,8 @@ const BasicInfo = ({data, setData}) => {
                         value={data.name}
                         placeholder="e.g. Taj Resort"
                         onChange={(e) => setData({...data, name: e.target.value})}
+                        required
+                        disabled={complete}
                         className="form-control" />
                     </div>
                 </div>
@@ -83,6 +154,8 @@ const BasicInfo = ({data, setData}) => {
                         </label>
                         <select
                         onChange={(e) => setData({...data, property_type: e.target.value})}
+                        required
+                        disabled={complete}
                         className="form-control">
                             <option value="">Select Property Type</option>
                             {propertyTypes.map((p, i) => (
@@ -103,7 +176,9 @@ const BasicInfo = ({data, setData}) => {
                         <input type="text"
                         value={data.poc_info.name}
                         placeholder="e.g Manager/Owners Name"
-                        onChange={(e) =>  setData({...data, poc_info: {name: e.target.value}})}
+                        required
+                        disabled={complete}
+                        onChange={(e) =>  setData({...data, poc_info: {...data.poc_info,name: e.target.value}})}
                         className="form-control" />
                     </div>
                 </div>
@@ -115,7 +190,9 @@ const BasicInfo = ({data, setData}) => {
                         <input type="text"
                         value={data.poc_info.phone}
                         placeholder="e.g +91 99999 99999"
-                        onChange={(e) =>  setData({...data, poc_info: {phone: e.target.value}})}
+                        required
+                        disabled={complete}
+                        onChange={(e) =>  setData({...data, poc_info: {...data.poc_info,phone: e.target.value}})}
                         className="form-control" />
                     </div>    
                 </div>
@@ -129,6 +206,8 @@ const BasicInfo = ({data, setData}) => {
                     <textarea
                     placeholder="Try to keep it under 300 characters"
                     value={data.content}
+                    required
+                    disabled={complete}
                     onChange={(e) => {setData({...data, content: e.target.value}); setAboutChar(e.target.value.length)}}
                     className="form-control ta" />
                 </div>
@@ -158,6 +237,27 @@ const BasicInfo = ({data, setData}) => {
                     </div>
                 </div>
             </div>
+            <div className="row">
+                <div className="col-12">
+                    <div className="form-section-footer d-flex justify-end">
+                        {
+                            step <= 4 ? (
+                                <button
+                                disabled={!(data.name && data.content && data.property_type.length && data.poc_info.name && data.poc_info.phone)}
+                                onClick={(e) => handleSave(e)}
+                                className="form-button bg-black">
+                                    Save & Continue &nbsp;<i class='bx bxs-right-arrow-alt'></i>
+                                </button>
+                            ):(
+                                <button
+                                className="form-button bg-purple">
+                                    Publish Property
+                                </button>
+                            )
+                        }
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }
@@ -171,10 +271,10 @@ const checkState = (stateName, countryCode) => {
         return false
     }
 }
-
-const Location = ({address, setAddress}) => {
+const AnyReactComponent = ({ text }) => <div>{text}</div>;
+const Location = ({address, setAddress, step, handleSave, back}) => {
     const [location, setLocation] = useState({
-        full: 'India',
+        full_address: 'India',
         state: '',
         country: '',
         region: '',
@@ -202,14 +302,14 @@ const Location = ({address, setAddress}) => {
         console.log(status, data);
         const {address_components, geometry} = data
         setLocation({
-            full: address_components.map((a) => a.long_name).join(", "),
+            full_address: address_components.map((a) => a.long_name).join(", "),
             country: address_components[address_components.length - 2].long_name,
             code: address_components[address_components.length - 2].short_name,
             pincode: address_components[address_components.length - 1].long_name,
             state: checkState(address_components[address_components.length - 3].long_name, address_components[address_components.length - 2].short_name),
             map: {
                 lat: geometry.location.lat,
-                lon: geometry.location.lng
+                lng: geometry.location.lng
             }
          })
     }
@@ -253,7 +353,7 @@ const Location = ({address, setAddress}) => {
                         <input type="text"
                         placeholder=''
                         disabled
-                        value={location && location.full && location.full}
+                        value={location && location.full_address && location.full_address}
                         className="form-control" />
                     </div>    
                 </div>
@@ -325,30 +425,55 @@ const Location = ({address, setAddress}) => {
                 <div className="form-group v-full">
                     <label className="form-label">Map View</label>
                    {notFound ? (<div className="form-control map">
-                    <GMapify
-                    mapOptions={{
-                        clickableIcons: true
-                    }}
-                    lat={location.map.lat}
-                    lng={location.map.lng}
-                    inputClassName={"form-control"}
-                    appKey="AIzaSyBtB0H3LUpHoVHg1QGlSoEonWjcesiXUR0" hasSearch hasMarker onSelect={onMapSelect}/>
-                    </div>):
+                   <GoogleMapReact
+                        bootstrapURLKeys={{ key: "" }}
+                        defaultCenter={location.map}
+                        defaultZoom={12}
+                    >
+                        <AnyReactComponent
+                        lat={59.955413}
+                        lng={30.337844}
+                        text="My Marker"
+                        />
+                    </GoogleMapReact>
+                   </div>
+                    ):
                     (<iframe
+                    title={"Selected Location"}
                     width={'100%'}
                     className="form-control map"
                     loading="lazy"
                     referrerPolicy="no-referrer-when-downgrade"
-                    src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBtB0H3LUpHoVHg1QGlSoEonWjcesiXUR0&q=${!notFound && location && location.full ? location.full.replace(",","+").replace(" ","").replace("&", "and"): (location.map.lat+','+location.map.lon)}`}>
+                    src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBtB0H3LUpHoVHg1QGlSoEonWjcesiXUR0&q=${!notFound && location && location.full_address ? location.full_address.replace(",","+").replace(" ","").replace("&", "and"): (location.map.lat+','+location.map.lon)}`}>
                     </iframe>)}
                 </div>
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-12">
+                    <div className="form-section-footer d-flex justify-end">
+                        {
+                            step <= 4 ? (
+                                <button
+                                onClick={(e) => handleSave(e)}
+                                className="form-button bg-black">
+                                    Save & Continue &nbsp;<i class='bx bxs-right-arrow-alt'></i>
+                                </button>
+                            ):(
+                                <button
+                                className="form-button bg-purple">
+                                    Publish Property
+                                </button>
+                            )
+                        }
+                    </div>
                 </div>
             </div>
         </div>
     )
 }
 
-const Amenities = ({amenities, setAmenities, loadPre}) => {
+const Amenities = ({amenities, setAmenities, step, handleSave, back}) => {
     const [amens, setAmens] = useState([])
     const [selected, setSelected] = useState([])
 
@@ -427,11 +552,31 @@ const Amenities = ({amenities, setAmenities, loadPre}) => {
                     </div>
                 </div>
             </div>
+            <div className="row">
+                <div className="col-12">
+                    <div className="form-section-footer d-flex justify-end">
+                        {
+                            step <= 4 ? (
+                                <button
+                                onClick={(e) => handleSave(e)}
+                                className="form-button bg-black">
+                                    Save & Continue &nbsp;<i class='bx bxs-right-arrow-alt'></i>
+                                </button>
+                            ):(
+                                <button
+                                className="form-button bg-purple">
+                                    Publish Property
+                                </button>
+                            )
+                        }
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }
 
-const Gallery = ({gallery, setGallery}) => {
+const Gallery = ({gallery, setGallery, step, handleSave}) => {
     const [locGallery, setLocGallery] = useState({
         cover_image: '',
         images: [],
@@ -515,12 +660,32 @@ const Gallery = ({gallery, setGallery}) => {
                     </div>
                 </div>
             </div>
+            <div className="row">
+                <div className="col-12">
+                    <div className="form-section-footer d-flex justify-end">
+                        {
+                            step <= 4 ? (
+                                <button
+                                onClick={(e) => handleSave(e)}
+                                className="form-button bg-black">
+                                    Save & Continue &nbsp;<i class='bx bxs-right-arrow-alt'></i>
+                                </button>
+                            ):(
+                                <button
+                                className="form-button bg-purple">
+                                    Publish Property
+                                </button>
+                            )
+                        }
+                    </div>
+                </div>
+            </div>
             <MediaHandler modalFor={modalFor} clearModal={setModalFor} media={gallery} setSelectedMedia={setGallery} modalState={modalState} setModalState={setModalState} />
         </div>
     )
 }
 
-const Policies = ({policies, setPolicies}) => {
+const Policies = ({policies, setPolicies, step, handleSave}) => {
     const [cancellationPolicy, setCancellationPolicy] = useState('')
     const addCancellationPolicy = (e) => {
         e.preventDefault()
@@ -625,51 +790,116 @@ const Policies = ({policies, setPolicies}) => {
                     </div>
                 </div>
             </div>
+            <div className="row">
+                <div className="col-12">
+                    <div className="form-section-footer d-flex justify-end">
+                        {
+                            step <= 4 ? (
+                                <button
+                                onClick={(e) => handleSave(e)}
+                                className="form-button bg-black">
+                                    Save & Continue &nbsp;<i class='bx bxs-right-arrow-alt'></i>
+                                </button>
+                            ):(
+                                <button
+                                className="form-button bg-purple">
+                                    Publish Property
+                                </button>
+                            )
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+const Verification = ({documents, setDocuments, step, handleSave, back}) => {
+    return(
+        <div className="col-12">
+            <div className="row">
+                <div className="col-12">
+                    <p>&nbsp;</p>
+                </div>
+            </div>
+            <div className="row">
+                <div className="col-12">
+                    <div className="form-section-footer d-flex justify-end">
+                        {
+                            step <= 4 ? (
+                                <button
+                                onClick={(e) => handleSave(e)}
+                                className="form-button bg-black">
+                                    Save & Continue &nbsp;<i class='bx bxs-right-arrow-alt'></i>
+                                </button>
+                            ):(
+                                <button
+                                className="form-button bg-purple">
+                                    Publish Property
+                                </button>
+                            )
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+const PropertyPreview = ({property}) => {
+    const [dis, setDis] = useState(false)
+    return (
+        <div className={`property-preview ${!dis && 'inactive'}`}>
+            {dis ? (
+                <div className="row">
+                    <div className="col-12 property-preview-header">Preview</div>
+                    {property && (
+                        <>
+                            <div className="col-12 property-preview-link">www.switchoff.in/property/{property._id}</div>
+                            <div className="col-12 property-preview-title">{property.basic_info.name ? property.basic_info.name : "Please Save the Details!" }</div>
+                            <div className="col-4 property-preview-image">
+                                <img src={property.gallery.cover_image} alt="" />
+                            </div>
+                            <div className="col-8 property-preview-content">
+                                <p>
+                                    {property.basic_info.content 
+                                    ? (property.basic_info.content.length > 165) ? property.basic_info.content.substring(0,165) : property.basic_info.content 
+                                    : "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy"}
+                                </p>
+                            </div>
+                        </>
+                    )}
+                    <span className='property-preview-close' onClick={() => setDis(false)}><i class='bx bxs-x-circle' ></i></span>
+                </div>
+            ) : (
+                <span onClick={() => setDis(true)}>Preview</span>
+            )}
         </div>
     )
 }
 
 const UpdateProperty = () => {
-    const [step, setStep] = useState(0);
+    const {property} = useSelector((state) => ({...state}))
+    const {auth} = useSelector((state) => ({...state}))
+    const {token} = auth
+    const [step, setStep] = useState(property.step);
     const [stepsCompl, setStepsCompl] = useState([false, false, false, false, false, false])
+    const navigate = useNavigate()
 
     const [basicInfo, setBasicInfo] = useState({
-        name: '',
-        content: '',
-        property_type:  '',
-        experience_tags: [],
+        name: property.basic_info.name,
+        content: property.basic_info.content,
+        property_type:  property.basic_info.property_type,
+        experience_tags: [...property.basic_info.experience_tags.map((tgs) => tgs._id)],
         poc_info: {
-            name: '',
-            phone: ''
-        },    
-    })
-    const [address, setAddress] = useState({
-        region: '',
-        country: '',
-        state: '',
-        full_address: '',
-        pincode: '',
-        map: {
-            lat: '',
-            lon: ''
-        }
-    })
-    const [amenities, setAmenities] = useState([])
-    const [gallery, setGallery] = useState({
-        cover_image: '',
-        images: [],
-        external_video: '',
-        videos: []
-    })
-    const [policies, setPolicies] = useState({
-        cancellation: [],
-        check_time: {
-            check_in: '',
-            check_out: ''
+            name: property.basic_info.poc_info.name,
+            phone: property.basic_info.poc_info.phone
         },
-        pets: false,
-        extra_charges: 0
     })
+    const [address, setAddress] = useState(property.basic_info.address)
+    const [amenities, setAmenities] = useState(property.amenities)
+    const [gallery, setGallery] = useState(property.gallery)
+    const [policies, setPolicies] = useState(property.policies)
     const [documents, setDocuments] = useState({
         gst_info: {
             gst_no: '',
@@ -689,6 +919,8 @@ const UpdateProperty = () => {
         comment: ''
     })
 
+    // const [property, setProperty] = useState()
+
     const handleStep = (step) => {
         if(step === 0 || stepsCompl[step-1]){
             setStep(step)
@@ -696,25 +928,102 @@ const UpdateProperty = () => {
             toast.error("Please complete previous step")
         }
     }
-
-    const handleSave = () => {
-        
+    const dispatch = useDispatch()
+    const handleSave = async (e) => {
+        e.preventDefault()
+        let propData = {
+            basic_info: {
+                ...basicInfo,
+                address: address
+            },
+            amenities: amenities,
+            gallery: gallery,
+            policies: policies,
+            documents: documents,
+            step: step <= property.step ? property.step: step,
+            status: step === 5
+        }
+        try{
+            let res;
+            if(property._id){
+                res = await updateProperty(token, propData, property._id)
+            }
+            // setProperty(res.data)
+            const {data} = res
+            console.log(data)
+            dispatch({
+                type: "PROPERTY_UPDATE",
+                payload: data
+            })
+            let cstep = stepsCompl
+            cstep[step] = true
+            setStepsCompl(cstep)
+            step < 5 && setStep(step + 1)
+            if(step < 5 && res.status === 200) toast.success("Saved")
+            if(step === 5 && res.status === 200){
+                toast.success("Published")
+                clearAll()
+            }
+        }catch(err){
+            if(err.response.status === 400) toast.error(`${err.response.data}`)
+        }
     }
 
-    const handleBack = () => {
+    const clearAll = () => {
+        dispatch({
+            type: "PROPERTY_CLEAR",
+            payload: propertyStructure
+        })
+        setStep(0)
+        setStepsCompl([false, false, false, false, false])
+        navigate("/properties")
+    }
 
+    const handleBack = (e) => {
+        e.preventDefault()
+        step > 4 && setStep(step - 1)
     }
 
     const handleSubmit = (e) => {
         e.preventDefault()
+        handleSave(e)
     }
+
+    const params = useParams()
+    
+    const setDataAfterDispatch = () => {
+        setBasicInfo({
+            name: property.basic_info.name,
+            content: property.basic_info.content,
+            property_type:  property.basic_info.property_type,
+            experience_tags: [...property.basic_info.experience_tags],
+            poc_info: {
+                name: property.basic_info.poc_info.name,
+                phone: property.basic_info.poc_info.phone
+            }
+        })
+        setStep(property.step)
+        setStepsCompl(stepsCompl.map((stp,i) => i <= step))
+        setAddress(property.basic_info.address)
+        setAmenities(property.amenities)
+        setGallery(property.gallery)
+        setPolicies(property.policies)
+        setDocuments(property.documents)
+    }
+
+    const [dataLoading, setDataLoading] = useState(false)
+
+    useEffect(() => {
+        setDataAfterDispatch()
+        setDataLoading(true)
+    },[])
     return(
         <div className="property">
             <div className="property-header">
                 Update Property
             </div>
             <div className="property-form">
-                <form onSubmit={(e) => handleSubmit(e)}>
+                {dataLoading && <form onSubmit={(e) => handleSubmit(e)}>
                     <div className="row">
                         <div className="col-12">
                             <div className="form-section-header">
@@ -728,37 +1037,16 @@ const UpdateProperty = () => {
                                 </ul>
                             </div>
                         </div>
-                        {step === 0 && <BasicInfo data={basicInfo} setData={setBasicInfo} />}
-                        {step === 1 && <Location address={address} setAddress={setAddress} />}
-                        {step === 2 && <Amenities amenities={amenities && amenities} loadPre={step === 2} setAmenities={setAmenities} />}
-                        {step === 3 && <Gallery gallery={gallery} setGallery={setGallery} />}
-                        {step === 4 && <Policies policies={policies} setPolicies={setPolicies} />}
-                        
-                        <div className="col-12">
-                            <div className="form-section-footer d-flex justify-between">
-                                <button
-                                disabled={step === 0}
-                                className="form-button bg-black">
-                                    <i class='bx bxs-left-arrow-alt'></i>&nbsp;Back
-                                </button>
-                                {
-                                    step <= 4 ? (
-                                        <button
-                                        className="form-button bg-black">
-                                            Save & Continue &nbsp;<i class='bx bxs-right-arrow-alt'></i>
-                                        </button>
-                                    ):(
-                                        <button
-                                        className="form-button bg-purple">
-                                            Publish Property
-                                        </button>
-                                    )
-                                }
-                            </div>
-                        </div>
+                        {step === 0 && <BasicInfo step={step} handleSave={handleSave} data={basicInfo} setData={setBasicInfo} />}
+                        {step === 1 && <Location step={step} handleSave={handleSave} address={address} setAddress={setAddress} back={handleBack} />}
+                        {step === 2 && <Amenities step={step} handleSave={handleSave} amenities={amenities && amenities} back={handleBack} loadPre={step === 2} setAmenities={setAmenities} />}
+                        {step === 3 && <Gallery step={step} handleSave={handleSave} gallery={gallery} setGallery={setGallery} back={handleBack} />}
+                        {step === 4 && <Policies step={step} handleSave={handleSave} policies={policies} setPolicies={setPolicies} back={handleBack} />}
+                        {step === 5 && <Verification step={step} handleSave={handleSave} documents={documents} setDocuments={setDocuments} back={handleBack} />}
                     </div>
-                </form>
+                </form>}
             </div>
+            <PropertyPreview property={property} />
         </div>
     )
 }
