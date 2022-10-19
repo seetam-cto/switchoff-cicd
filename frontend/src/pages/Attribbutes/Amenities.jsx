@@ -3,8 +3,123 @@ import "./style.scss"
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import MediaHandler, {IconSelector} from "../../components/media"
-import { addAmenity, getAmenities } from '../../actions/attributes';
+import { addAmenity, getAmenities, updateAmenity } from '../../actions/attributes';
 import { useEffect } from 'react';
+import Modal from 'react-modal';
+
+const UpdateForm = ({amenity, setSelectedAmenity, handleUpdate, state, setState}) => {
+    const [propType, setProptype] = useState(amenity)
+    const [modalFor, setModalFor] = useState('')
+    const [modalState, setModalState] = useState(false)
+
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        handleUpdate(e, amenity._id, propType)
+        clearAll()
+    }
+
+    const clearAll = () => {
+        setSelectedAmenity({
+            title: '',
+            icon: '',
+            for: 'property',
+            exclusive: false
+        })
+        setState(false)
+    }
+    const handleIcon = (e) => {
+        e.preventDefault()
+        setModalFor("AMENITY_ICON")
+        setModalState(true)
+    }
+    useEffect(() => {
+        setProptype(amenity)
+    },[amenity])
+    return (
+        <Modal
+        isOpen={state}
+        onRequestClose={() => setState(false)}
+        className="attr-modal"
+        >
+            <div className="attr-modal-container">
+                <div className="attr-header">
+                    Update Amenity
+                </div>
+                <div className="attr-form">
+                    <form onSubmit={(e) => handleSubmit(e)}>
+                        <div className="row">
+                            <div className="col-4 col-sm-12">
+                                <div className="form-group">
+                                    <label className="form-label">
+                                        Amenity Name
+                                    </label>
+                                    <input type="text"
+                                    value={propType.title}
+                                    onChange={(e) => setProptype({...propType, title: e.target.value})}
+                                    placeholder='e.g. Swimming Pool, Spa, etc.'
+                                    className="form-control" />
+                                </div>
+                            </div>
+                            <div className="col-3 col-sm-12">
+                                <div className="form-group">
+                                    <label className="form-label">
+                                        Amenity For
+                                    </label>
+                                    <select
+                                    value={propType.for}
+                                    onChange={(e) => setProptype({...propType, for: e.target.value})}
+                                    className="form-control">
+                                        <option value="property">Property</option>
+                                        <option value="room">Room</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="col-3 col-sm-12">
+                                <div className="form-group">
+                                    <label className="form-label">Select Icon</label>
+                                    <IconSelector handler={handleIcon} iconurl={propType.icon} />
+                                </div>
+                            </div>
+                            <div className="col-1">
+                                <div className="form-group">
+                                    <label className="form-label">Exclusive</label>
+                                    <input
+                                    checked={propType.exclusive}
+                                    onChange={(e) => setProptype({...propType, exclusive: e.target.checked})}
+                                    type="checkbox" className="form-control ch" />
+                                </div>
+                            </div>
+                            <div className="col-12 col-sm-12">
+                                <div className="row">
+                                    <div className="col-7"></div>
+                                    <div className="col-2">
+                                        <div className="form-group">
+                                            <button
+                                            onClick={() => clearAll()}
+                                            className='form-button clear full'>
+                                                Cancle
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div className="col-3">
+                                        <div className="form-group">
+                                            <button
+                                            onClick={(e) => handleSubmit(e)}
+                                            className='form-button full'>
+                                                Update
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <MediaHandler modalFor={modalFor} clearModal={setModalFor} media={propType} setSelectedMedia={setProptype} modalState={modalState} setModalState={setModalState} />
+            </div>
+        </Modal>
+    )
+}
 
 const Amenities = () => {
     const {auth} = useSelector((state) => ({...state}))
@@ -23,6 +138,32 @@ const Amenities = () => {
         setModalState(true)
     }
 
+    //updatemodal
+    const [modalIsOpen, setIsOpen] = useState(false);
+    const [selectedAmenity, setSelectedAmenity] = useState({
+        title: '',
+        icon: '',
+        for: 'property',
+        exclusive: false
+    })
+
+    const openUpdate = (amenity) => {
+        setSelectedAmenity(amenity)
+        setIsOpen(true)
+    }
+
+    const handleUpdate = async (e, id, data) => {
+        e.preventDefault()
+        try{
+            let res = await updateAmenity(token, data, id)
+            if(res.status === 200) toast.success("Amenity Updated")
+        }catch(err){
+            if(err.response.status === 400) toast.error(`${err.response.data}`)
+        }
+    }
+
+    //end update
+
     const [propertyTypes, setPropertyTypes] = useState([])
     const loadPropertyTypes = async () => {
         try{
@@ -36,7 +177,7 @@ const Amenities = () => {
 
     useEffect(() => {
         loadPropertyTypes()
-    }, [])
+    }, [selectedAmenity])
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -154,12 +295,17 @@ const Amenities = () => {
                                 <img src={ppt.icon} alt="" />
                             </div>
                             <div className="col-3 attr-list-body">
-                                Edit/Delete
+                                <button
+                                onClick={() => openUpdate(ppt)}
+                                className="form-button update">
+                                    <i class='bx bxs-pencil'></i> Edit
+                                </button>
                             </div>
                         </div>
                     ))
                 }
             </div>
+            <UpdateForm amenity={selectedAmenity} setSelectedAmenity={setSelectedAmenity} state={modalIsOpen} setState={setIsOpen} handleUpdate={handleUpdate} />
             <MediaHandler modalFor={modalFor} clearModal={setModalFor} media={propType} setSelectedMedia={setProptype} modalState={modalState} setModalState={setModalState} />
         </div>
     )

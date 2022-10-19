@@ -114,7 +114,9 @@ const PropertyRow = ({ppt, i}) => {
                     : <> - <span className="property-list-body-tag draft">Completed {((ppt.step)/5)*100}%</span></>}
                 </div>
                 <div className="col-12 property-list-body-title-buttons">
-                    <button className="property-list-body-button edit">
+                    <button
+                    onClick={() => navigate("/properties/"+ppt._id+"/rooms")}
+                    className="property-list-body-button edit">
                         <i class='bx bxs-building' ></i>&nbsp;Rooms
                     </button>
                     <button

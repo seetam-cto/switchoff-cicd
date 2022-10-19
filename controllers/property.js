@@ -1,4 +1,5 @@
 import Property from "../models/property"
+import Room from "../models/room";
 
 export const getProperties = async (req, res) => {
     try{
@@ -29,7 +30,6 @@ export const getProperty = async (req, res) => {
 
 export const addProperty = async (req, res) => {
     let {auth, body} = req
-    console.log(body)
     const propData = {
         ...body,
         createdBy: auth._id
@@ -57,5 +57,67 @@ export const updateProperty = async (req, res) => {
     }catch(err){
         console.log(err)
         res.status(400).send("Property Update Failed!")
+    }
+}
+
+//rooms
+export const getRooms = async (req, res) => {
+    try{
+        let rooms = await Room.find({propertyId: req.params.propertyId})
+        .populate("propertyId")
+        .populate("createdBy")
+        .populate("amenities")
+        .exec();
+        if(!rooms) return res.status(400).send("No Rooms Found!")
+        res.status(200).json(rooms)
+    }catch(err){
+        console.log(err)
+        res.status(200).send("Error in Fetching Rooms")
+    }
+}
+
+export const getRoom = async (req, res) => {
+    try{
+        let room = await Room.findById(req.params.roomId)
+                    .populate("propertyId")
+                    .populate("createdBy")
+                    .populate("amenities")
+                    .exec();
+        if(!room) return res.status(400).send("Room Details Found!")
+        res.status(200).json(room)
+    }catch(err){
+        console.log(err)
+        res.status(200).send("Error in Fetching Room Details")
+    }
+}
+
+
+export const addRoom = async (req, res) => {
+    let {auth, body} = req
+    const roomData = {
+        ...body,
+        createdBy: auth._id
+    }
+    const room = new Room(roomData)
+    try{
+        await room.save()
+        return res.status(200).json(room)
+    }catch(err){
+        console.log(err)
+        if(err.code == 11000){
+            res.status(400).send("Room Already Exists")
+        }else{
+            res.status(400).send("Couldn't add Room!")
+        }
+    }
+}
+export const updateRoom = async (req, res) => {
+    let {body, params} = req
+    try{
+        let updated = await Room.findByIdAndUpdate(params.roomId, body, {new: true})
+        res.status(200).json(updated)
+    }catch(err){
+        console.log(err)
+        res.status(400).send("Room Update Failed!")
     }
 }

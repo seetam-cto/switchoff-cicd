@@ -10,7 +10,7 @@ export const getPropertyTypes = async (req, res) => {
         res.status(200).json(propTypes)
     }catch(err){
         console.log(err)
-        res.status(200).send("Error in Fetching Property Types")
+        res.status(400).send("Error in Fetching Property Types")
     }
 } 
 
@@ -26,6 +26,17 @@ export const addPropertyType = async (req, res) => {
         return res.status(200).json(propertyType)
     }catch(err){
         res.status(400).send("Couldn't add Property Type!")
+    }
+}
+
+export const updatePropertyType = async (req, res) => {
+    let {body, params} = req
+    try{
+        let updated = await PropertyType.findByIdAndUpdate(params.id, body, {new: true})
+        res.status(200).json(updated)
+    }catch(err){
+        console.log(err)
+        res.status(400).send("Property Type Update Failed!")
     }
 }
 
@@ -53,6 +64,17 @@ export const addExperience = async (req, res) => {
         return res.status(200).json(experience)
     }catch(err){
         res.status(400).send("Couldn't add Experience!")
+    }
+}
+
+export const updateExperience = async (req, res) => {
+    let {body, params} = req
+    try{
+        let updated = await Experience.findByIdAndUpdate(params.id, body, {new: true})
+        res.status(200).json(updated)
+    }catch(err){
+        console.log(err)
+        res.status(400).send("Experience Update Failed!")
     }
 }
 
@@ -88,3 +110,14 @@ export const addAmenity = async (req, res) => {
         }
     }
 } 
+
+export const updateAmenity = async (req, res) => {
+    let {body, params} = req
+    try{
+        let updated = await Amenity.findByIdAndUpdate(params.id, body, {new: true})
+        res.status(200).json(updated)
+    }catch(err){
+        console.log(err)
+        res.status(400).send("Amenity Update Failed!")
+    }
+}

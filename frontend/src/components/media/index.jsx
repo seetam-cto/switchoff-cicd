@@ -146,6 +146,12 @@ const MediaHandler = ({media, setSelectedMedia, modalState, setModalState, modal
             }else{
                 setSelectedMedia({...media, images: [...media.images, allFiles[selectedFile] && allFiles[selectedFile].url] });
             }
+        }else if(modalFor === "ROOM_IMAGES"){
+            if(media.images.map((ims) => ims.url).includes(allFiles[selectedFile] && allFiles[selectedFile].url)){
+                toast.error("Image already added!")
+            }else{
+                setSelectedMedia({...media, images: [...media.images, {url: allFiles[selectedFile] && allFiles[selectedFile].url, caption: ''}] });
+            }
         }
         clearModal('')
         closeModal()

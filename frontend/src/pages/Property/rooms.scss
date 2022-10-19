@@ -1,0 +1,32 @@
+@use '../../scss/abstracts/' as *;
+
+.property{
+    &-rooms{
+        background-color: transparent;
+        margin-top: 20px;
+        border-radius: 20px;
+        padding: 20px;
+        box-sizing: border-box;
+        max-height: 60vh;
+        display: flex;
+        flex-wrap: wrap;
+        row-gap: 20px;
+        justify-content: space-between;
+        &-card{
+            width: 49%;
+            background-color: $white;
+            padding: 10px;
+            border-radius: 10px;
+        }
+        .card{
+
+        }
+        &-greybox{
+            background-color: #00000010;
+            border-radius: 10px;
+            .scale-down{
+                transform: scale(0.9);
+            }
+        }
+    }
+}

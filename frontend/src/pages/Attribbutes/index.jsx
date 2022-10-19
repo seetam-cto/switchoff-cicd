@@ -3,6 +3,7 @@ import "./style.scss"
 import DashboardWrapper, { DashboardWrapperMain, DashboardWrapperRight } from "../../components/dashboard-wrapper/DashboardWrapper"
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import SummaryBox from "../../components/summary-box/SummaryBox"
+import { allAttributes } from '../../actions/attributes'
 
 //Main Component
 const Attributes = () => {
@@ -44,7 +45,7 @@ const Attributes = () => {
 }
 
 export const AttribbutesStats = () => {
-    const [attribStat, setAttribStat] = useState([
+    let sts = [
         {
             title: 'Experiences',
             subtitle: 'Total experiences',
@@ -68,12 +69,28 @@ export const AttribbutesStats = () => {
             dont: true,
             to: '/attributes/property-type'
         }
-    ])
+    ]
+    const [attribStat, setAttribStat] = useState()
+    useEffect(() => {
+        const loadData = async () => {
+            try{
+                let res = await allAttributes()
+                let newStat = sts
+                newStat[0].value = res.propTypes
+                newStat[1].value = res.amenities
+                newStat[2].value = res.experiences
+                setAttribStat(newStat)
+            }catch(err){
+                console.log(err)
+            }
+        }
+        loadData()
+    },[])
     return(
         <div className="attr-container">
             <div className="row">
                 {
-                    attribStat.map((item, index) => (
+                    attribStat && attribStat.map((item, index) => (
                         <Link to={item.to} key={`summary-${index}`} className="col-4 col-md-4 col-sm-12 mb">
                             <SummaryBox item={item} />
                         </Link>
