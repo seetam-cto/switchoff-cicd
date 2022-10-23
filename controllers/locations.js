@@ -1,5 +1,16 @@
 import Location from "../models/location";
 
+export const getAllLocations = async (req, res) => {
+    try{
+        let locations = await Location.find().exec()
+        if(!locations) return res.status(400).send("No Locations Found!")
+        res.status(200).json(locations)
+    }catch(err){
+        console.log(err)
+        res.status(200).send("Error in Fetching Locations")
+    }
+} 
+
 export const getLocations = async (req, res) => {
     const location_type = req.params.type
     try{
@@ -32,8 +43,10 @@ export const addLocation = async (req, res) => {
         return res.status(200).json(location)
     }catch(err){
         if(err.code == 11000){
+            console.log(err)
             res.status(400).send("Country Already Exists")
         }else{
+            console.log(err)
             res.status(400).send("Couldn't add Location!")
         }
     }

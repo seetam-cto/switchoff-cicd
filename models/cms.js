@@ -7,7 +7,11 @@ const cmsSchema = new Schema({
         logo: String,
         menu: [{
             title: String,
-            url: String
+            url: String,
+            submenu: [{
+                title: String,
+                url: String
+            }]
         }],
         colours: {
             primary: String,
@@ -28,7 +32,12 @@ const cmsSchema = new Schema({
             phone: String
         }
     },
-    homePage: {
+    homepage: {
+        banner: [{
+            type: ObjectId,
+            ref: "Location"
+        }],
+        propCount: [Number],
         deals: {
             title: String,
             subTitle: String,
@@ -58,6 +67,7 @@ const cmsSchema = new Schema({
                 title: String,
                 subTitle: String
             }],
+            link: String,
             enabled: {
                 type: Boolean,
                 default: true

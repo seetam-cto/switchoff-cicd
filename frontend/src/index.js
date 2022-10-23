@@ -14,10 +14,6 @@ const store = configureStore({reducer: rootReducer})
 
 ReactDOM.render(
     <React.StrictMode>
-        {/* <script
-        type="text/javascript"
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBtB0H3LUpHoVHg1QGlSoEonWjcesiXUR0&libraries=places"
-        /> */}
         <Provider store={store}>
             <App />
         </Provider>

@@ -8,7 +8,7 @@ const locationSchema = new Schema({
     },
     about: {
         type: String,
-        maxlength: 200
+        maxlength: 500
     },
     icon: {
         type: String
@@ -46,6 +46,6 @@ const locationSchema = new Schema({
     }
 }, {timestamps: true})
 
-locationSchema.index({name: 1, code: 1}, {unique: true})
+locationSchema.index({name: 1, lat_lon: {lat: 1, lon: 1}}, {unique: true})
 
 export default mongoose.model("Location", locationSchema)

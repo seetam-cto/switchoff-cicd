@@ -28,7 +28,7 @@ export const roomOwner = async (req, res, next) => {
 }
 
 export const allowedSettings = async (req, res, next) => {
-    let settings = await CMS.findById(req,params.id).exec()
+    let settings = await CMS.findById(req.params.id).exec()
     let owner = settings.allowed.map(set => set.toString()).includes(req.auth._id.toString())
     if(!owner){
         return res.status(403).send("Unauthorized!")

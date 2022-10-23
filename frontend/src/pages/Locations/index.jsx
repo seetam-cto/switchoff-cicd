@@ -368,6 +368,7 @@ const AddState = ({refreshStates}) => {
             parent: countries[ind]._id,
             isd: countries[ind].isd,
             cur: countries[ind].cur,
+            code: countries[ind].code,
             cur_symbol: countries[ind].cur_symbol
         })
     }
