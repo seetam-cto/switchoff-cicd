@@ -42,9 +42,10 @@ const cmsSchema = new Schema({
             title: String,
             subTitle: String,
             list: [{
-                type: ObjectId,
-                ref: "Property"
-            }],
+                    type: ObjectId,
+                    ref: "Property"
+                }],
+            dealTitle: [String],
             enabled: {
                 type: Boolean,
                 default: true
@@ -92,6 +93,7 @@ const cmsSchema = new Schema({
         },
     },
     footer: {
+        logo: String,
         quickLinks: [{
             link: String,
             text: String

@@ -7,6 +7,13 @@ export const getSettings = async (req, res) => {
         let properties = await Property.find().exec()
         let settings = await CMS.find()
         .populate("homepage.banner")
+        .populate({
+            path: "homepage.deals",
+            populate: {
+                path: "list",
+                model: "Property"
+            }
+        })
         .exec()
 
         if(!settings) return res.status(400).send("Settings not found!")
