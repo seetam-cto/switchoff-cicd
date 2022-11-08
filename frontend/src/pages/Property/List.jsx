@@ -3,6 +3,9 @@ import "./style.scss"
 import { useSelector, useDispatch } from "react-redux";
 import { getProperties, getProperty } from '../../actions/property';
 import { useNavigate } from 'react-router-dom';
+import Modal from 'react-modal';
+import { PropTypes } from './propTypes';
+import { OTP, PhoneInput } from '../../components/forms';
 
 const propertyStructure = {
     basic_info: {
@@ -156,12 +159,93 @@ const PropertyRow = ({ppt, i}) => {
     )
 }
 
+const AddProperty = ({modalState, setModalState}) => {
+    const [poc, setPoc] = useState(propertyStructure)
+    const setPocPhone = (value) => {
+        setPoc({
+            ...poc,
+            basic_info: {
+                ...poc.basic_info,
+                poc_info: {
+                    ...poc.basic_info.poc_info,
+                    phone: value
+                }
+            }
+        })
+    }
+    const [otp, setOtp] = useState('')
+    const closeModal = () => {
+        setModalState(false)
+    }
+    return (
+        <Modal
+        isOpen={modalState && modalState}
+        onRequestClose={closeModal}
+        contentLabel="Example Modal"
+        ariaHideApp={false}
+        className="addnew-modal">
+            <div className="addnew-modal-overlay"></div>
+            <div className="addnew-modal-container">
+                <span
+                onClick={() => closeModal()}
+                className="addnew-modal-close">
+                    <i class='bx bx-x'></i>
+                </span>
+                <div className="row">
+                    <div className="col-12">
+                        <h3>Let's start with basic details</h3>
+                        <p>&nbsp;</p>
+                    </div>
+                    <div className="col-12">
+                        <div className="form-group">
+                            <label className="form-label">
+                                {PropTypes.apartment.steps.name_location.name.title}
+                            </label>
+                            <input type="text"
+                            placeholder='Please enter property name'
+                            className="form-control" />
+                        </div>
+                        <div className="form-group">
+                            <label className="form-label">
+                                What's the name of POC (Point of Contact)
+                            </label>
+                            <input type="text"
+                            placeholder='Please provide POC name'
+                            className="form-control" />
+                        </div>
+                        <div className="form-group">
+                            <label className="form-label">
+                                Also please provide POC Phone Number
+                            </label>
+                            <PhoneInput
+                                value={poc.basic_info.poc_info.phone}
+                                setValue={setPocPhone}
+                                preText={"+91"}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label className="form-label">
+                            A new property will be created for the above POC
+                            </label>
+                            <button className="form-button full">
+                                Create new Property
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </Modal>
+    )
+}
+
 const ListProperty = () => {
     const [properties, setProperties] = useState([])
     const dispatch = useDispatch()
+    const navigate = useNavigate()
     const {auth} = useSelector((state) => ({...state}))
     const {token} = auth
     const [trash, setTrash] = useState(false)
+    const [addState, setAddState] = useState(false)
 
     const loadProperties = async () => {
         try{
@@ -182,7 +266,15 @@ const ListProperty = () => {
     return(
         <div className="property">
             <div className="property-header">
-                All Properties
+                <span>
+                    All Properties
+                </span>
+                <button
+                onClick={() => setAddState(true)}
+                className="form-button">
+                    Add Property
+                </button>
+                <AddProperty modalState={addState} setModalState={setAddState} />
             </div>
             <div className="row">
                 <div className="col-5">

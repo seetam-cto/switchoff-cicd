@@ -23,6 +23,36 @@ export const register = async (req, res) => {
     }
 }
 
+export const adminLogin = async (req, res) => {
+    const {email, password} = req.body
+    try{
+        //check if email exists
+        let user = await User.findOne({email: email, user_type: "admin"}).exec()
+        // console.log('User Exists', user)
+        if(!user) return res.status(400).send(`Admin with email ${email} not found!`)
+        // Compare password
+        user.comparePassword(password, (err, match) => {
+            console.log('COMPARE PASSWORD IN LOGIN ERR', err)
+            if(!match || err) return res.status(400).send('Password doesn\'t match!')
+            let token = jwt.sign({_id: user._id}, process.env.JWT_SECRET, {
+                expiresIn: '7d'
+            })
+            res.status(200).json({ token, user: {
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                phone_number: user.phone_number,
+                createdAt: user.createdAt,
+                updatedAt: user.updatedAt
+            } })
+        })
+        
+    }catch(err){
+        console.log('Login Error: ', err)
+        res.status(400).send("Signin Failed!")
+    }
+}
+
 export const login = async (req, res) => {
     const {email, password} = req.body
     try{

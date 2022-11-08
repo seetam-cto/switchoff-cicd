@@ -3,32 +3,23 @@ const {Schema} = mongoose
 const {ObjectId} = mongoose.Schema
 
 const roomSchema = new Schema({
-    title: String,
-    roomNo: String,
-    roomtype: String,
-    about: String,
-    area: String,
-    view: String,
+    name: String,
+    roomType: String,
     beds: {
         single: Number,
         double: Number,
         queen: Number,
         king: Number,
         bunk: Number,
-        sofa: Number
+        sofabed: Boolean,
+        extra: Boolean
     },
+    privateBathroom: Boolean,
     capacity: {
         type: Number,
         default: 3,
     },
-    extraBed: Boolean,
-    specialNote: String,
-    bathroom: {
-        private: Boolean,
-        items: [{
-            type: String
-        }]
-    },
+    roomSize: String,
     amenities: [{
         category: String,
         title: String
@@ -37,17 +28,13 @@ const roomSchema = new Schema({
         url: String,
         caption: String,
     }],
-    policies: {
-        cancellation: [{
-            type: String
-        }],
-        refund: {
-            type: String
-        }
-    },
     basePrice: {
         mrp: Number,
         sale: Number
+    },
+    status: Number,
+    wpId: {
+        type: String
     },
     propertyId: {
         type: ObjectId,
@@ -59,6 +46,6 @@ const roomSchema = new Schema({
     }
 }, {timestamps: true})
 
-roomSchema.index({roomNo: 1, propertyId: 1}, {unique: true})
+roomSchema.index({wpId: 1, propertyId: 1}, {unique: true})
 
 export default mongoose.model("Room", roomSchema)

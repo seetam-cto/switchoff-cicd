@@ -24,7 +24,7 @@ import ListProperty from './pages/Property/List'
 import Preview from './pages/Property/Preview'
 import CalendarView from './pages/Property/Calendar'
 import Rooms from './pages/Property/Rooms'
-
+import NewProperty from './pages/Property/New'
 
 
 function App() {
@@ -47,6 +47,7 @@ function App() {
                         <Route path="update/:propertyId" element={<UpdateProperty />} />
                         <Route path="preview/:propertyId" element={<Preview />} />
                         <Route path="calendar/:propertyId" element={<CalendarView />} />
+                        <Route path="manage/:propertyId" element={<NewProperty />} />
                         <Route path=":propertyId/rooms" element={<Rooms />} />
                     </Route>
                     <Route path="medialibrary" element={<Media />} />

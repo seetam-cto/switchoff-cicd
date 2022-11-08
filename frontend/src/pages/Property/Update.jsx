@@ -272,6 +272,7 @@ const checkState = (stateName, countryCode) => {
     }
 }
 const AnyReactComponent = ({ text }) => <div>{text}</div>;
+
 const Location = ({address, setAddress, step, handleSave, back}) => {
     const [location, setLocation] = useState({
         full_address: 'India',
@@ -576,13 +577,7 @@ const Amenities = ({amenities, setAmenities, step, handleSave, back}) => {
     )
 }
 
-const Gallery = ({gallery, setGallery, step, handleSave}) => {
-    const [locGallery, setLocGallery] = useState({
-        cover_image: '',
-        images: [],
-        external_video: '',
-        videos: []
-    })
+const Gallery = ({gallery, setGallery, step, handleSave, propId}) => {
     const [modalState, setModalState] = useState(false)
     const [modalFor, setModalFor] = useState('')
 
@@ -680,7 +675,7 @@ const Gallery = ({gallery, setGallery, step, handleSave}) => {
                     </div>
                 </div>
             </div>
-            <MediaHandler modalFor={modalFor} clearModal={setModalFor} media={gallery} setSelectedMedia={setGallery} modalState={modalState} setModalState={setModalState} />
+            <MediaHandler propertyId={propId} modalFor={modalFor} clearModal={setModalFor} media={gallery} setSelectedMedia={setGallery} modalState={modalState} setModalState={setModalState} />
         </div>
     )
 }
@@ -881,6 +876,7 @@ const PropertyPreview = ({property}) => {
 const UpdateProperty = () => {
     const {property} = useSelector((state) => ({...state}))
     const {auth} = useSelector((state) => ({...state}))
+    const [propId, setPropId] = useState(property._id)
     const {token} = auth
     const [step, setStep] = useState(property.step);
     const [stepsCompl, setStepsCompl] = useState([false, false, false, false, false, false])
@@ -951,6 +947,7 @@ const UpdateProperty = () => {
             // setProperty(res.data)
             const {data} = res
             console.log(data)
+            setPropId(data._id)
             dispatch({
                 type: "PROPERTY_UPDATE",
                 payload: data
@@ -1040,7 +1037,7 @@ const UpdateProperty = () => {
                         {step === 0 && <BasicInfo step={step} handleSave={handleSave} data={basicInfo} setData={setBasicInfo} />}
                         {step === 1 && <Location step={step} handleSave={handleSave} address={address} setAddress={setAddress} back={handleBack} />}
                         {step === 2 && <Amenities step={step} handleSave={handleSave} amenities={amenities && amenities} back={handleBack} loadPre={step === 2} setAmenities={setAmenities} />}
-                        {step === 3 && <Gallery step={step} handleSave={handleSave} gallery={gallery} setGallery={setGallery} back={handleBack} />}
+                        {step === 3 && <Gallery step={step} handleSave={handleSave} gallery={gallery} setGallery={setGallery} back={handleBack} propId={propId} />}
                         {step === 4 && <Policies step={step} handleSave={handleSave} policies={policies} setPolicies={setPolicies} back={handleBack} />}
                         {step === 5 && <Verification step={step} handleSave={handleSave} documents={documents} setDocuments={setDocuments} back={handleBack} />}
                     </div>

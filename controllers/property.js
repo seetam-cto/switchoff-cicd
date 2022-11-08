@@ -16,25 +16,24 @@ export const getProperties = async (req, res) => {
 
 export const getProperty = async (req, res) => {
     try{
-        let properties = await Property.findById(req.params.propertyId)
-        .populate("basic_info.experience_tags")
-        .populate("amenities")
-        .exec();
+        let properties = await Property.findById(req.params.propertyId).exec();
         if(!properties) return res.status(400).send("No Properties Found!")
         res.status(200).json(properties)
     }catch(err){
         console.log(err)
-        res.status(200).send("Error in Fetching Properties")
+        res.status(200).send("Error in Fetching Property details")
     }
 }
 
 export const addProperty = async (req, res) => {
     let {auth, body} = req
+    console.log(body)
     const propData = {
         ...body,
         createdBy: auth._id
     }
     const property = new Property(propData)
+
     try{
         await property.save()
         return res.status(200).json(property)
@@ -57,6 +56,17 @@ export const updateProperty = async (req, res) => {
     }catch(err){
         console.log(err)
         res.status(400).send("Property Update Failed!")
+    }
+}
+
+export const deleteProperty = async (req, res) => {
+    let {params} = req
+    try{
+        let deleted = await Property.findByIdAndUpdate(params.id, {deleted: true}, {new: true})
+        res.status(200).json(deleted)
+    }catch(err){
+        console.log(err)
+        res.status(400).send("Property Delete Failed!")
     }
 }
 

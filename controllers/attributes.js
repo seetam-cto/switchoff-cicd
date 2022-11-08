@@ -23,7 +23,9 @@ export const addPropertyType = async (req, res) => {
     const propertyType = new PropertyType(propertyTypeData)
     try{
         await propertyType.save()
-        return res.status(200).json(propertyType)
+        let propTypes = await PropertyType.find().exec()
+        if(!propTypes) return res.status(400).send("No Property Types Found!")
+        res.status(200).json(propTypes)
     }catch(err){
         res.status(400).send("Couldn't add Property Type!")
     }
@@ -34,6 +36,19 @@ export const updatePropertyType = async (req, res) => {
     try{
         let updated = await PropertyType.findByIdAndUpdate(params.id, body, {new: true})
         res.status(200).json(updated)
+    }catch(err){
+        console.log(err)
+        res.status(400).send("Property Type Update Failed!")
+    }
+}
+
+export const deletePropertyType = async (req, res) => {
+    let {params} = req
+    try{
+        await PropertyType.findByIdAndUpdate(params.id, {active: false}, {new: true})
+        let propTypes = await PropertyType.find().exec()
+        if(!propTypes) return res.status(400).send("No Property Types Found!")
+        res.status(200).json(propTypes)
     }catch(err){
         console.log(err)
         res.status(400).send("Property Type Update Failed!")

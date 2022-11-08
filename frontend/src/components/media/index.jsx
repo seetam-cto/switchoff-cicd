@@ -5,7 +5,7 @@ import Modal from 'react-modal';
 import { FileUploader } from "react-drag-drop-files";
 import { useSelector } from "react-redux";
 
-import { uploadMedia, getMedia } from "../../actions/media"
+import { uploadMedia, getMedia, getSpecificMedia, uploadMediaToProperty } from "../../actions/media"
 import { toast } from "react-toastify";
 import ContentLoader from 'react-content-loader'
 const placeImg = "https://placehold.jp/30/a8a8a8/ffffff/300x150.png?text="
@@ -23,6 +23,32 @@ const ShortFileSpan = ({filename}) => {
         <span>
             {file_name}
         </span>
+    )
+}
+
+const MultiFileBox = ({fileData, selected, setSelected, findex}) => {
+    const handleSelect = () => {
+        if(selected.includes(findex)){
+            setSelected(selected.filter((item) => item !== findex))
+        }else{
+            setSelected([...selected, findex])
+        }
+    }
+    useEffect(() => {
+        
+    },[selected])
+    return (
+        <div
+        key={findex}
+        onClick={() => handleSelect()}
+        className={`files-view-wrapper-box ${selected && selected.includes(findex) && 'active'}`}>
+            {fileData && (
+                <>
+                {(fileData.media_type === "image" || fileData.media_type === "icon") && <img src={fileData.url} alt="" /> }
+                <ShortFileSpan filename={fileData.title} />
+                </>
+            )}
+        </div>
     )
 }
 
@@ -53,7 +79,7 @@ const FileBoxLoading = () => (
     </div>
 )
 
-const MediaHandler = ({media, setSelectedMedia, modalState, setModalState, modalFor, clearModal}) => {
+const MediaHandler = ({media, setSelectedMedia, modalState, setModalState, modalFor, clearModal, propertyId}) => {
     //Upload
     const [uploadVisible, setUploadVisible] = useState(false)
     const [file, setFile] = useState(null);
@@ -63,6 +89,7 @@ const MediaHandler = ({media, setSelectedMedia, modalState, setModalState, modal
 
     //active file
     const [selectedFile, setSelectedFile] = useState(0)
+    const [selectedFiles, setSelectedFiles] = useState([0])
 
     //set media type
     const [mediaType, setMediaType] = useState("all")
@@ -77,7 +104,13 @@ const MediaHandler = ({media, setSelectedMedia, modalState, setModalState, modal
     const loadMedia = async () => {
         setAllFiles([])
         try{
-            let res = await getMedia(token)
+
+            let res;
+            if(modalFor.substring(0,8) === "PROPERTY"){
+                res = await getSpecificMedia(token, propertyId)
+            }else{
+                res = await getMedia(token)
+            }
             setTimeout(() => {
                 setAllFiles(res.data)
             }, 1000)
@@ -92,8 +125,8 @@ const MediaHandler = ({media, setSelectedMedia, modalState, setModalState, modal
     }
 
     useEffect(() => {
-        loadMedia()
-    },[])
+        modalFor && loadMedia()
+    },[modalFor])
     
     useEffect(() => {
         file && handleRefresh()
@@ -101,9 +134,18 @@ const MediaHandler = ({media, setSelectedMedia, modalState, setModalState, modal
 
     const handleUpload = async () => {
         let formData = new FormData()
-        file && formData.append('media', file)
+        if(file.length > 0){
+            for(var i =0; i< file.length; i++){
+                formData.append('media', file[i])
+            }
+        }
         try{
-            let res = await uploadMedia(token, formData)
+            let res;
+            if(modalFor.substring(0,8) === "PROPERTY"){
+                res = await uploadMediaToProperty(token, formData, propertyId)
+            }else{
+                res = await uploadMedia(token, formData)
+            }
             if(res.status === 200) toast.success("File Uploaded!")
             // file && setFile(null)
         }catch(err){
@@ -120,6 +162,7 @@ const MediaHandler = ({media, setSelectedMedia, modalState, setModalState, modal
 
     function closeModal() {
         setModalState(false)
+        setAllFiles([])
     }
 
     const handleConfirm = (e) => {
@@ -144,7 +187,8 @@ const MediaHandler = ({media, setSelectedMedia, modalState, setModalState, modal
             }else if(allFiles[selectedFile] && media.cover_image === allFiles[selectedFile].url){
                 toast.error("Image cant be same as Cover!")
             }else{
-                setSelectedMedia({...media, images: [...media.images, allFiles[selectedFile] && allFiles[selectedFile].url] });
+                let newImages = selectedFiles.map((sf) => allFiles[sf] && allFiles[sf].url)
+                setSelectedMedia({...media, images: [...media.images, ...newImages] });
             }
         }else if(modalFor === "ROOM_IMAGES"){
             if(media.images.map((ims) => ims.url).includes(allFiles[selectedFile] && allFiles[selectedFile].url)){
@@ -166,12 +210,12 @@ const MediaHandler = ({media, setSelectedMedia, modalState, setModalState, modal
         className="upload-modal">
             <div className="upload-modal-overlay"></div>
             <div className="upload-modal-container">
-            <span
-            onClick={() => closeModal()}
-            className="upload-modal-close">
-                <i class='bx bx-x-circle'></i>
-            </span>
-            <div className="files-upload-wrapper">
+                <span
+                onClick={() => closeModal()}
+                className="upload-modal-close">
+                    <i class='bx bx-x-circle'></i>
+                </span>
+                <div className="files-upload-wrapper">
                     <div className="files-upload-header">
                         <div className="files-upload-header-blocks">
                             <div className="files-upload-header-blocks-block">
@@ -208,7 +252,7 @@ const MediaHandler = ({media, setSelectedMedia, modalState, setModalState, modal
                         </div>
                     </div>
                     {uploadVisible && (<FileUploader
-                        multiple={false}
+                        multiple={modalFor === "PROPERTY_GALLERY"}
                         handleChange={handleChange}
                         name="file"
                         types={modalFor.split("_")[modalFor.split("_").length - 1] === "ICON" ? onlyIcon : fileTypes }
@@ -222,21 +266,31 @@ const MediaHandler = ({media, setSelectedMedia, modalState, setModalState, modal
                     </FileUploader>)}
                 </div>
                 <div className="files-view-wrapper">
-                    {allFiles && allFiles.length > 0 ? allFiles.map((f, i) => (
-                        <>
-                            {(mediaType === "video" && f.media_type ==="video") && <FileBox selected={selectedFile} setSelected={setSelectedFile} findex={i} fileData={f} key={f._id} />}
-                            {(mediaType === "image" && (f.media_type ==="image" || f.media_type === "icon")) && <FileBox selected={selectedFile} setSelected={setSelectedFile} findex={i} fileData={f} key={f._id} />}
-                            {mediaType === "all" && <FileBox selected={selectedFile} setSelected={setSelectedFile} findex={i} fileData={f} key={f._id} />}
-                            {(mediaType === "document" && f.media_type ==="document") && <FileBox selected={selectedFile} setSelected={setSelectedFile} findex={i} fileData={f} key={f._id} />}
-                        </>
-                    )
-                    ) : 
-                        [1,2,3,4,5,6].map((k,i) => <FileBoxLoading key={i} />)
+                    {allFiles && allFiles.length > 0 
+                    ? modalFor === "PROPERTY_GALLERY" ?
+                        allFiles.map((f, i) => (
+                            <>
+                                {(mediaType === "all") && <MultiFileBox selected={selectedFiles} setSelected={setSelectedFiles} findex={i} fileData={f} key={f._id} />}
+                                {(mediaType === "image" && (f.media_type ==="image" || f.media_type === "icon")) && <MultiFileBox selected={selectedFiles} setSelected={setSelectedFiles} findex={i} fileData={f} key={f._id} />}
+                                </>
+                        ))
+                        : allFiles.map((f, i) => (
+                            <>
+                                {(mediaType === "video" && f.media_type ==="video") && <FileBox selected={selectedFile} setSelected={setSelectedFile} findex={i} fileData={f} key={f._id} />}
+                                {(mediaType === "image" && (f.media_type ==="image" || f.media_type === "icon")) && <FileBox selected={selectedFile} setSelected={setSelectedFile} findex={i} fileData={f} key={f._id} />}
+                                {mediaType === "all" && <FileBox selected={selectedFile} setSelected={setSelectedFile} findex={i} fileData={f} key={f._id} />}
+                                {(mediaType === "document" && f.media_type ==="document") && <FileBox selected={selectedFile} setSelected={setSelectedFile} findex={i} fileData={f} key={f._id} />}
+                            </>
+                        ))
+                    : [1,2,3,4,5,6].map((k,i) => <FileBoxLoading key={i} />)
                     }
                 </div>
                 <div className="files-confirm-wrapper">
                     <div className="selected-file">
-                        <strong>Selected File: </strong>{allFiles && allFiles.length > 0 && (<ShortFileSpan filename={allFiles[selectedFile].title} />)}
+                        {modalFor && modalFor === "PROPERTY_GALLERY"
+                            ? (<><strong>Selected Files: </strong>{selectedFiles && selectedFiles.length}</>)
+                            : (<><strong>Selected File: </strong>{allFiles && allFiles.length > 0 && (<ShortFileSpan filename={allFiles[selectedFile].title} />)}</>)
+                        }
                     </div>
                     <button onClick={(e) => handleConfirm(e)} className="form-button">
                         Confirm Selection

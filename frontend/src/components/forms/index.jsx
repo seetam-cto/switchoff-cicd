@@ -64,3 +64,39 @@ export const CheckBox = ({value, setValue}) => {
     )
 }
 
+export const PhoneInput = ({value, setValue, preText}) => {
+    const handleOnChange = (e) => {
+        if(e.target.value.length <= 10)
+            setValue(e.target.value)
+    }
+    return (
+        <div className="form-control-container">
+            <span>{preText}</span>
+            <input
+            type="number"
+            value={value}
+            placeholder="e.g 9876543210"
+            onChange={(e) => handleOnChange(e)}
+            className="form-control" />
+        </div>
+    )
+}
+
+export const OTP = ({value, setValue, enabled}) => {
+    const handleOnChange = (e) => {
+        if(e.target.value.length <= 6)
+            setValue(e.target.value)
+    }
+    return (
+        <div className="form-control-container">
+            <span>OTP</span>
+            <input
+            type="number"
+            value={value}
+            placeholder="Enter 6 Digit OTP"
+            disabled={!enabled}
+            onChange={(e) => handleOnChange(e)}
+            className="form-control otp" />
+        </div>
+    )
+}

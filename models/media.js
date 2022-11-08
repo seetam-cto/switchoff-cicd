@@ -14,6 +14,10 @@ const mediaSchema = new Schema({
         type: String,
         require: 'Media URL is required'
     },
+    forProperty: {
+        type: ObjectId,
+        ref: "Property"
+    },
     media_type: {
         type: String
     },

@@ -586,13 +586,7 @@ const Amenities = ({amenities, setAmenities, step, handleSave}) => {
     )
 }
 
-const Gallery = ({gallery, setGallery, step, handleSave}) => {
-    const [locGallery, setLocGallery] = useState({
-        cover_image: '',
-        images: [],
-        external_video: '',
-        videos: []
-    })
+const Gallery = ({gallery, setGallery, step, handleSave, propId}) => {
     const [modalState, setModalState] = useState(false)
     const [modalFor, setModalFor] = useState('')
 
@@ -695,7 +689,7 @@ const Gallery = ({gallery, setGallery, step, handleSave}) => {
                     </div>
                 </div>
             </div>
-            <MediaHandler modalFor={modalFor} clearModal={setModalFor} media={gallery} setSelectedMedia={setGallery} modalState={modalState} setModalState={setModalState} />
+            <MediaHandler propertyId={propId} modalFor={modalFor} clearModal={setModalFor} media={gallery} setSelectedMedia={setGallery} modalState={modalState} setModalState={setModalState} />
         </div>
     )
 }
@@ -905,6 +899,7 @@ const PropertyPreview = ({property}) => {
 
 const AddProperty = () => {
     const {property} = useSelector((state) => ({...state}))
+    const [propId, setPropId] = useState(property._id)
     const {auth} = useSelector((state) => ({...state}))
     const {token} = auth
     const [step, setStep] = useState(property.step);
@@ -979,7 +974,7 @@ const AddProperty = () => {
             }
             // setProperty(res.data)
             const {data} = res
-            console.log(data)
+            setPropId(data._id)
             dispatch({
                 type: "PROPERTY_UPDATE",
                 payload: data
@@ -1039,7 +1034,7 @@ const AddProperty = () => {
                         {step === 0 && <BasicInfo step={step} handleSave={handleSave} data={basicInfo} setData={setBasicInfo} />}
                         {step === 1 && <Location step={step} handleSave={handleSave} address={address} setAddress={setAddress} />}
                         {step === 2 && <Amenities step={step} handleSave={handleSave} amenities={amenities && amenities} loadPre={step === 2} setAmenities={setAmenities} />}
-                        {step === 3 && <Gallery step={step} handleSave={handleSave} gallery={gallery} setGallery={setGallery} />}
+                        {step === 3 && <Gallery step={step} handleSave={handleSave} gallery={gallery} setGallery={setGallery} propId={propId} />}
                         {step === 4 && <Policies step={step} handleSave={handleSave} policies={policies} setPolicies={setPolicies} />}
                         {step === 5 && <Verification step={step} handleSave={handleSave} documents={documents} setDocuments={setDocuments} />}
                     </div>

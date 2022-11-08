@@ -32,7 +32,7 @@ const FileBox = ({fileData, selected, setSelected, findex}) => {
         className={`files-view-wrapper-box ${selected === findex && 'active'}`}>
             {fileData && (
                 <>
-                {(fileData.media_type === "image" || fileData.media_type === "icon") && <img src={fileData.url} alt="" /> }
+                {(fileData.media_type === "image" || fileData.media_type === "icon") && <img src={fileData.url.substring(0,4) === "http" ? fileData.url : "https://" + fileData.url} alt="" /> }
                 {(fileData.media_type === "document") && <i className='bx bxs-file-pdf pdf-icon' ></i>}
                 <ShortFileSpan filename={fileData.title} />
                 </>

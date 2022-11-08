@@ -1,6 +1,6 @@
 import express from "express"
 import { appendFile } from "fs"
-import { getMedia, uploadMedia, getPrivateMedia } from "../controllers/media"
+import { getMedia, uploadMedia, getPrivateMedia, getSpecificMedia, uploadPropertyMedia } from "../controllers/media"
 import { requireSignIn } from "../middlewares"
 const path = require('path')
 import { v4 as uuidv4 } from 'uuid';
@@ -54,7 +54,9 @@ const upload = multer({storage: s3storage})
 const router = express.Router()
 
 router.post("/media/upload", requireSignIn, upload.single("media"), uploadMedia)
+router.post("/media/:propertyId/upload", requireSignIn, upload.array("media",30), uploadPropertyMedia)
 router.get("/media/:id", getMedia)
 router.get("/media", requireSignIn, getPrivateMedia)
+router.get("/media/property/:propertyId", requireSignIn, getSpecificMedia)
 
 module.exports = router

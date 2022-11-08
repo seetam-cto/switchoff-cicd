@@ -3,132 +3,170 @@ const {Schema} = mongoose
 const {ObjectId} = mongoose.Schema
 
 const propertySchema = new Schema({
-    basic_info: {
+    nameLocation: {
         name: {
             type: String,
-            required: true
+            required: "Name is required"
         },
-        content: {
-            type: String,
-            required: 'Content is required!',
-            maxlength: 10000
+        about: {
+            type: String
+        },
+        propertyType: {
+            type: ObjectId,
+            ref: "PropertyType"
         },
         address: {
-            region: {
-                type: String
-            },
-            country: {
-                type: String
-            },
-            state: {
-                type: String
-            },
-            full_address: {
-                type: String
-            },
+            fullAddress: String,
+            state: String,
+            country: String,
             pincode: String,
+            locality: String,
             map: {
                 lat: String,
                 lng: String
             }
         },
-        property_type: {
+        status: {
+            type: Boolean,
+            default: true
+        }
+    },
+    propertySetup: {
+        amenities: [{
             type: ObjectId,
-            ref: "PropType"
-        },
-        experience_tags: [{
-            type: ObjectId,
-            ref: "Experience"
+            ref: "Amenity"
         }],
-        poc_info: {
-            name: {
-                type: String,
-                required: true
+        rules: {
+            breakfast: {
+                type: Boolean,
+                default: false
             },
-            phone: {
-                type: String,
-                required: true
+            parking: {
+                allowed: {
+                    type: Boolean, 
+                    default: false
+                },
+                private: {
+                    type: Boolean, 
+                    default: false
+                },
+                free: Boolean
+            },
+            events: {
+                allowed: {
+                    type: Boolean,
+                    default: false
+                }
+            },
+            checkin: {
+                from: Date,
+                to: Date
+            },
+            checkout: {
+                from: Date,
+                to: Date
+            },
+            smoking: {
+                type: Boolean,
+                default: false
+            },
+            children: {
+                type: Boolean,
+                default: false
+            },
+            pets: {
+                allowed: {
+                    type: Boolean, 
+                    default: false
+                },
+                free: Boolean
             }
         },
-    },
-    amenities: [{
-        type: ObjectId,
-        ref: "Amenity"
-    }],
-    gallery: {
-        cover_image: {
-            type: String
+        details: {
+            area: String,
         },
-        images: [{
-            type: String
-        }],
-        external_video: {
-            type: String
-        },
-        videos: [{
-            type: String
-        }]
+        status: {
+            type: Boolean,
+            default: false
+        }
     },
-    policies: {
-        all: [{
-            policyType: String,
-            policy: String,
+    gallery: 
+    {
+        photos: [{
+            type: String,
         }],
-        others: [{
-            type: String
-        }],
-        couple_friendly: Boolean,
-        check_time: {
-            check_in: String,
-            check_out: String
-        },
-        pets: Boolean,
-        extra_charges: Number
+        status: {
+            type: Boolean,
+            default: false
+        }
     },
-    documents: {
-        gst_info: {
-            gst_no: String,
-            gst_proof: {
+    pricingCalendar: {
+        pricePerNight: {
+            type: Number
+        },
+        policies: {
+            all: [{
+                policyType: String,
+                policy: String,
+            }],
+            others: [{
                 type: String
-            },
+            }],
+        },
+        availability: {
+            startfrom: Date,
+            sync: {
+                type: Boolean,
+                default: true
+            }
+        },
+        status: {
+            type: Boolean,
+            default: false
+        }
+    },
+    legal: {
+        licence: {
+            type: String
+        },
+        poc: {
+            fullName: String,
+            fullAddress: String,
+            businessAddress: String,
+            zip: String,
+            city: String,
+            Country: String,
+            alias: String
+        },
+        gst: {
+            tradeName: String,
+            gstin: String,
+            pan: String,
             verified: {
                 type: Boolean,
                 default: false
             }
         },
-        poc_id: {
-            id_type: String,
-            id_no: String,
-            id_proof: {
-                type: String,
-            },
-            verified: {
-                type: Boolean,
-                default: false
-            }
-        },
-        contract: {
-            contract_id: String,
-            contract_pdf: {
-                type: String
-            }
-        },
-        comment: String,
+        status: {
+            type: Boolean,
+            default: false
+        }
     },
-    step: {
-        type: Number
-    },
-    status: Boolean,
-    trash: {
+    verified: {
         type: Boolean,
         default: false
     },
+    deleted: {
+        type: Boolean,
+        default: false
+    },
+    status: String,
     createdBy: {
         type: ObjectId,
         ref: "User"
     }
 }, {timestamps: true})
 
-propertySchema.index({basic_info: 1}, {unique: true})
+propertySchema.index({nameLocation : {name: 1, address: { map : { lat: 1, lng: 1}}}}, {unique: true})
 
 export default mongoose.model("Property", propertySchema)

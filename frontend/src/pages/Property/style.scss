@@ -6,6 +6,7 @@
     box-shadow: 0px 0px 10px #00000030;
 }
 .property{
+    width: 100%;
     &-right{
         &-menu{
             list-style: none;
@@ -37,6 +38,11 @@
         font-weight: 600;
         border-radius: 20px;
         margin-bottom: 10px;
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
     }
     &-body{
         &-stats{
@@ -299,6 +305,63 @@
             align-items: center;
             color: $purple;
             font-size: 14px;
+        }
+    }
+}
+
+.ReactModal__Overlay{
+    z-index: 1000;
+}
+
+.addnew-modal{
+    width: 100%;
+    height: 100%;
+    top: 0;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999;
+    &-overlay{
+        width: 100%;
+        height: 100%;
+        opacity: 0.4;
+        background-color: $black;
+        position: absolute !important;
+        top: 0;
+        left: 0;
+        z-index: 5;
+    }
+    &-container{
+        background-color: $white;
+        border-radius: 10px;
+        padding: 20px;
+        box-sizing: border-box;
+        max-width: 30%;
+        width: fit-content;
+        max-height: 80%;
+        height: fit-content;
+        z-index: 10;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        img{
+            height: 100%;
+            border-radius: 10px;
+            object-fit: contain;
+        }
+    }
+    &-close{
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        cursor: pointer;
+        i{
+            color: $black;
+            font-size: 2.5rem;
+            font-weight: 100;
         }
     }
 }
