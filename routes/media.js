@@ -26,7 +26,7 @@ const iconTypes = ['image/x-icon', 'image/svg+xml']
 //     },
 //     filename: (req, file, cb) => {
 //         cb(null, uuidv4() + path.extname(file.originalname))
-//     }
+//     }     
 // })
 
 const s3storage =  multerS3({
