@@ -3,7 +3,7 @@ import { requireSignIn, propertyOwner, roomOwner } from "../middlewares"
 import {
     getProperties, addProperty, updateProperty,
     getProperty, getRooms, addRoom, updateRoom, 
-    getRoom, deleteProperty
+    getRoom, deleteProperty, deleteRoom
 } from "../controllers/property"
 
 const router = express.Router()
@@ -20,5 +20,6 @@ router.get("/properties/:propertyId/rooms", getRooms)
 router.get("/properties/rooms/:roomId", getRoom)
 router.post("/properties/rooms/add", requireSignIn, addRoom)
 router.put("/properties/rooms/update/:roomId", requireSignIn, roomOwner, updateRoom)
+router.delete("/properties/rooms/delete/:roomId", requireSignIn, roomOwner, deleteRoom)
 
 module.exports = router

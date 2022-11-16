@@ -32,10 +32,7 @@ const propertySchema = new Schema({
         }
     },
     propertySetup: {
-        amenities: [{
-            type: ObjectId,
-            ref: "Amenity"
-        }],
+        amenities: [],
         rules: {
             breakfast: {
                 type: Boolean,
@@ -59,12 +56,12 @@ const propertySchema = new Schema({
                 }
             },
             checkin: {
-                from: Date,
-                to: Date
+                from: {type: Date, default: new Date()},
+                to: {type: Date, default: new Date()}
             },
             checkout: {
-                from: Date,
-                to: Date
+                from: {type: Date, default: new Date()},
+                to: {type: Date, default: new Date()}
             },
             smoking: {
                 type: Boolean,
@@ -92,9 +89,7 @@ const propertySchema = new Schema({
     },
     gallery: 
     {
-        photos: [{
-            type: String,
-        }],
+        photos: [],
         status: {
             type: Boolean,
             default: false

@@ -61,6 +61,12 @@ export const getPrivateMedia = async (req, res) => {
     }
 }
 
+export const directUpload = async (req, res) => {
+    // console.log(req.file)
+    if(!req.file) return res.status(400).send("Upload Failed!")
+    return res.status(200).json(req.file)
+}
+
 export const uploadMedia = async (req, res) => {
     // console.log(JSON.stringify(req.file, null, 4))
     if(!req.file) return res.status(400).send("Upload Failed!")

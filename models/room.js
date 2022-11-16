@@ -20,14 +20,8 @@ const roomSchema = new Schema({
         default: 3,
     },
     roomSize: String,
-    amenities: [{
-        category: String,
-        title: String
-    }],
-    images: [{
-        url: String,
-        caption: String,
-    }],
+    amenities: [],
+    images: [],
     basePrice: {
         mrp: Number,
         sale: Number

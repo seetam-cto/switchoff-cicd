@@ -5,7 +5,7 @@ export const getProperties = async (req, res) => {
     try{
         let properties = await Property.find()
         .populate("createdBy")
-            .exec();
+        .exec();
         if(!properties) return res.status(400).send("No Properties Found!")
         res.status(200).json(properties)
     }catch(err){
@@ -73,7 +73,7 @@ export const deleteProperty = async (req, res) => {
 //rooms
 export const getRooms = async (req, res) => {
     try{
-        let rooms = await Room.find({propertyId: req.params.propertyId})
+        let rooms = await Room.find({propertyId: req.params.propertyId, status: {$gt : -2}})
         .populate("propertyId")
         .populate("createdBy")
         .populate("amenities")
@@ -91,7 +91,6 @@ export const getRoom = async (req, res) => {
         let room = await Room.findById(req.params.roomId)
                     .populate("propertyId")
                     .populate("createdBy")
-                    .populate("amenities")
                     .exec();
         if(!room) return res.status(400).send("Room Details Found!")
         res.status(200).json(room)
@@ -104,6 +103,7 @@ export const getRoom = async (req, res) => {
 
 export const addRoom = async (req, res) => {
     let {auth, body} = req
+    console.log(body)
     const roomData = {
         ...body,
         createdBy: auth._id
@@ -125,6 +125,17 @@ export const updateRoom = async (req, res) => {
     let {body, params} = req
     try{
         let updated = await Room.findByIdAndUpdate(params.roomId, body, {new: true})
+        res.status(200).json(updated)
+    }catch(err){
+        console.log(err)
+        res.status(400).send("Room Update Failed!")
+    }
+}
+
+export const deleteRoom = async (req, res) => {
+    let {params} = req
+    try{
+        let updated = await Room.findByIdAndUpdate(params.roomId, {status: -2}, {new: true})
         res.status(200).json(updated)
     }catch(err){
         console.log(err)
