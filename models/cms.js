@@ -34,8 +34,8 @@ const cmsSchema = new Schema({
     },
     homepage: {
         banner: [{
-            type: ObjectId,
-            ref: "Location"
+            background: String,
+            card: String
         }],
         propCount: [Number],
         deals: {

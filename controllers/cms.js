@@ -4,7 +4,6 @@ import Property from "../models/property"
 //get settings
 export const getSettings = async (req, res) => {
     try{
-        let properties = await Property.find().exec()
         let settings = await CMS.find()
         .populate("homepage.banner")
         .populate({
@@ -19,13 +18,6 @@ export const getSettings = async (req, res) => {
         if(!settings) return res.status(400).send("Settings not found!")
 
         let setting = settings[0]
-        let locations = setting.homepage.banner.map(ban => ban.name)
-        let counts = locations.map(loc => 0)
-        for(var i = 0; i < locations.length; i++){
-            counts[i] += properties.map((p) => p.basic_info.address.country === locations[i] ? 1 : 0).reduce((partialSum, a) => partialSum + a, 0);
-            counts[i] += properties.map((p) => p.basic_info.address.state === locations[i] ? 1 : 0).reduce((partialSum, a) => partialSum + a, 0);
-        }
-        setting.homepage.propCount = counts
         res.status(200).json(setting)
     }catch(err){
         console.log(err)
