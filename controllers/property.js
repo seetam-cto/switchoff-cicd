@@ -59,6 +59,18 @@ export const updateProperty = async (req, res) => {
     }
 }
 
+export const updatePropertyStatus = async (req, res) => {
+    let {body, params} = req
+    console.log(body)
+    try{
+        await Property.findByIdAndUpdate(params.id, {status: body}, {new: true})
+        res.status(200).send("Property Status Updated")
+    }catch(err){
+        console.log(err)
+        res.status(400).send("Property Status Update Failed!")
+    }
+}
+
 export const deleteProperty = async (req, res) => {
     let {params} = req
     try{
@@ -76,7 +88,6 @@ export const getRooms = async (req, res) => {
         let rooms = await Room.find({propertyId: req.params.propertyId, status: {$gt : -2}})
         .populate("propertyId")
         .populate("createdBy")
-        .populate("amenities")
         .exec();
         if(!rooms) return res.status(400).send("No Rooms Found!")
         res.status(200).json(rooms)
