@@ -63,7 +63,7 @@ export const updatePropertyStatus = async (req, res) => {
     let {body, params} = req
     console.log(body)
     try{
-        await Property.findByIdAndUpdate(params.id, {status: body}, {new: true})
+        await Property.findByIdAndUpdate(params.id, {status: body.status}, {new: true})
         res.status(200).send("Property Status Updated")
     }catch(err){
         console.log(err)
