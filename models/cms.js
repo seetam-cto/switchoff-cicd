@@ -35,9 +35,12 @@ const cmsSchema = new Schema({
     homepage: {
         banner: [{
             background: String,
-            card: String
+            card: String,
+            title: String,
+            subTitle: String,
+            propertyCount: String,
+            link: String,
         }],
-        propCount: [Number],
         deals: {
             title: String,
             subTitle: String,
