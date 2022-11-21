@@ -12,7 +12,8 @@ export const requireSignIn = expressjwt({
 
 export const propertyOwner = async (req, res, next) => {
     let property = await Property.findById(req.params.id).exec()
-    let owner = property.createdBy.toString() == req.auth._id.toString()
+    let user = await User.findById(req.auth._id)
+    let owner = property.createdBy.toString() == req.auth._id.toString() || user.user_type === "admin"
     if(!owner){
         return res.status(403).send("Unauthorized!")
     }
@@ -21,7 +22,8 @@ export const propertyOwner = async (req, res, next) => {
 
 export const roomOwner = async (req, res, next) => {
     let room = await Room.findById(req.params.roomId).exec()
-    let owner = room.createdBy.toString() == req.auth._id.toString()
+    let user = await User.findById(req.auth._id)
+    let owner = room.createdBy.toString() == req.auth._id.toString() || user.user_type === "admin"
     if(!owner){
         return res.status(403).send("Unauthorized!")
     }
