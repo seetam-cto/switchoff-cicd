@@ -168,7 +168,7 @@ export const getCalendar = async (req, res) => {
 
 export const handleRoomPrice = async (req, res) => {
     let {auth, body} = req
-    let exists = await Calender.find({date: body.date, roomId: body.roomId}).exec()
+    let exists = await Calender.find({date: body.date, roomId: req.params.roomId}).exec()
     if(exists){
         try{
             let updated = await Calender.findByIdAndUpdate(exists[0]._id, body, {new: true})
@@ -180,6 +180,7 @@ export const handleRoomPrice = async (req, res) => {
     }else{
         const calendarData = {
             ...body,
+            roomId: req.params.roomId,
             createdBy: auth._id
         }
         const calendar = new Calender(calendarData)
