@@ -1,5 +1,6 @@
 import Property from "../models/property"
 import Room from "../models/room";
+import Calender from "../models/calender";
 
 export const getProperties = async (req, res) => {
     try{
@@ -151,5 +152,45 @@ export const deleteRoom = async (req, res) => {
     }catch(err){
         console.log(err)
         res.status(400).send("Room Update Failed!")
+    }
+}
+
+export const getCalendar = async (req, res) => {
+    try{
+        let calendar = await Calender.find({roomId: req.params.roomId}).exec()
+        if(!calendar) return res.status(400).send("Create Calendar")
+        res.status(200).json(calendar)
+    }catch(err){
+        console.log(err)
+        res.status(200).send("Error in fetching Calendar")
+    }
+}
+
+export const handleRoomPrice = async (req, res) => {
+    let {auth, body} = req
+    let exists = await Calender.find({date: body.date, roomId: body.roomId}).exec()
+    if(exists){
+        try{
+            let updated = await Calender.findByIdAndUpdate(exists[0]._id, body, {new: true})
+            res.status(200).json(updated)
+        }catch(err){
+            console.log(err)
+            res.status(400).send("Price Update Failed!")
+        }
+    }else{
+        const calendarData = {
+            ...body,
+            createdBy: auth._id
+        }
+        const calendar = new Calender(calendarData)
+        try{
+            await calendar.save()
+            return res.status(200).json(calendar)
+        }catch(err){
+            console.log(err)
+            if(err.code == 11000){
+                res.status(400).send
+            }
+        }
     }
 }

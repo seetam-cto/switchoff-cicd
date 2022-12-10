@@ -52,3 +52,14 @@ export const updateSettings = async (req, res) => {
         res.status(400).send("Settings Update Failed!")
     }
 }
+
+// export const updateBanner = async (req, res) => {
+//     let {body, params} = req
+//     try{
+//         let settings = await CMS.findByIdAndUpdate(params.id, 
+//             {
+//                 homepage : {
+//                     banner}
+//             }, {new: true})
+//     }
+// }
