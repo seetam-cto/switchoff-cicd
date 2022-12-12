@@ -243,22 +243,9 @@ export const updatePassword = async (req, res) => {
 
 //User Profile Management - Update Profile
 export const updateUser = async (req, res) => {
-    // console.log(req.body)
-    const {id, name, email, password, user_type} = req.body
-    //validation
-    if(!email) return res.status(400).send('Email is required!')
-    if(!password || password.length < 8) return res.status(400).send('Password is required and should be 8 characters long!')
-
-    const newData = {
-        name,
-        email,
-        password,
-        profile_image: req.body.profile_image ? req.body.profile_image : "",
-        user_type
-    }
-
+    const {body} = req
     try{
-        let updated = await User.findByIdAndUpdate(id, newData, {new:true})
+        let updated = await User.findByIdAndUpdate(req.params.id, body, {new:true})
         return res.status(200).json(updated)
     }catch(err){
         console.log('UPDATE USER FAILED: ', err)
