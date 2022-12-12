@@ -20,6 +20,58 @@ export const getAllUsers = async (req, res) => {
     }
 }
 
+export const adminRegister = async (req, res) => {
+    // console.log(req.body)
+    const {name, email, user_type} = req.body
+    //validation
+    if(!email) return res.status(400).send('Email is required!')
+
+    let userExists = await User.findOne({email: email})
+    if(userExists) return res.status(400).send('Account already exists')
+
+    let randomString = crypto.randomBytes(12).toString("hex");
+
+    //register
+    const user = new User({...req.body, password: randomString})
+    try{
+        await user.save()
+        const msg = {
+            to: email, // Change to your recipient
+            from: 'no-reply@switchoff.in', // Change to your verified sender
+            subject: `Team SwitchOff - Invited you with ${user_type.toUpperCase()} access.`,
+            text:   `Hi, ${name}\n` +
+                    'Please use the following details to login on SwitchOff.\n' +
+                    'Login at https://admin.switchoff.in'+
+                    `Username: ${email}\n` +
+                    `Password: ${randomString}\n` +
+                    '\n \nRegards, \nTeam SwitchOff',
+            html:   `Hi, ${name}<br>` +
+                    'Please use the following details to login on SwitchOff.' +
+                    'Login at <a href="https://admin.switchoff.in">https://admin.switchoff.in</a>'+
+                    `<strong>Username: </strong> ${email}<br>` +
+                    `<strong>Password: </strong> ${randomString}<br>` +
+                    '<br><br>Regards, <br>Team SwitchOff'
+        }
+
+        sgMail
+        .send(msg)
+        .then(() => {
+            console.log('Invite Sent')
+            res.status(200).send("Invite Sent!")
+        })
+        .catch((error) => {
+            console.error(error)
+            res.status(400).send("Sendgrid Unsuccessful!")
+        })
+
+        console.log('USER CREATED', user)
+        return res.status(200).json({ok: true})
+    }catch(err){
+        console.log('CREATE USER FAILED: ', err)
+        return res.status(400).send('Error. Try Again.')
+    }
+}
+
 export const register = async (req, res) => {
     // console.log(req.body)
     const {name, email, password} = req.body
@@ -31,7 +83,7 @@ export const register = async (req, res) => {
     if(userExists) return res.status(400).send('Account already exists')
 
     //register
-    const user = new User(req.body)
+    const user = new User({...req.body, user_type: "customer"})
     try{
         await user.save()
         console.log('USER CREATED', user)
