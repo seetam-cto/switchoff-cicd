@@ -168,6 +168,7 @@ export const getCalendar = async (req, res) => {
 
 export const handleRoomPrice = async (req, res) => {
     let {auth, body} = req
+    console.log(body, req.params.roomId)
     let exists = await Calender.findOne({date: body.date, roomId: req.params.roomId}).exec()
     if(exists){
         try{
