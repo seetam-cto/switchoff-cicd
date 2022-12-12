@@ -4,7 +4,7 @@ import Calender from "../models/calender";
 
 export const getProperties = async (req, res) => {
     try{
-        let properties = await Property.find()
+        let properties = await Property.find({deleted: false})
         .populate("createdBy")
         .exec();
         if(!properties) return res.status(400).send("No Properties Found!")

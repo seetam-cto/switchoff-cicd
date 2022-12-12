@@ -132,7 +132,7 @@ export const login = async (req, res) => {
         // console.log('User Exists', user)
         if(!user) res.status(400).send(`User with email ${email} not found!`)
         //check active
-        if(!user.active) res.status(400).send("Ur Account has been deactivated!")
+        if(!user.active) res.status(400).send("Your Account has been deactivated!")
         // Compare password
         user.comparePassword(password, (err, match) => {
             console.log('COMPARE PASSWORD IN LOGIN ERR', err)
