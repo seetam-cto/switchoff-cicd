@@ -57,11 +57,9 @@ export const adminRegister = async (req, res) => {
         .send(msg)
         .then(() => {
             console.log('Invite Sent')
-            res.status(200).send("Invite Sent!")
         })
         .catch((error) => {
             console.error(error)
-            res.status(400).send("Sendgrid Unsuccessful!")
         })
 
         console.log('USER CREATED', user)
