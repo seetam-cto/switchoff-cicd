@@ -46,8 +46,8 @@ export const adminRegister = async (req, res) => {
                     `Password: ${randomString}\n` +
                     '\n \nRegards, \nTeam SwitchOff',
             html:   `Hi, ${name}<br>` +
-                    'Please use the following details to login on SwitchOff.' +
-                    'Login at <a href="https://admin.switchoff.in">https://admin.switchoff.in</a>'+
+                    'Please use the following details to login on SwitchOff.<br>' +
+                    'Login at <a href="https://admin.switchoff.in">https://admin.switchoff.in</a><br>'+
                     `<strong>Username: </strong> ${email}<br>` +
                     `<strong>Password: </strong> ${randomString}<br>` +
                     '<br><br>Regards, <br>Team SwitchOff'
