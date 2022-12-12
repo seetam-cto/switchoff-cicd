@@ -8,7 +8,8 @@ import {
     updateUser,
     deactivateUser,
     verifyUser,
-    adminLogin
+    adminLogin,
+    getAllUsers
 } from "../controllers/auth"
 import { requireSignIn } from "../middlewares"
 
@@ -19,6 +20,7 @@ router.post('/login', login)
 router.post('/admin/login', adminLogin)
 
 //user interactions
+router.get('/user/all', getAllUsers)
 router.post('/user/update', requireSignIn, updateUser)
 router.put('/user/delete', requireSignIn, deactivateUser)
 

@@ -5,6 +5,21 @@ import crypto from "crypto"
 import bcrypt from "bcrypt"
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
+export const getAllUsers = async (req, res) => {
+    try{
+        let users = await User.find()
+        .select("-password")
+        .select("-passcode")
+        .select("-passchange")
+        .exec()
+        if(!users) return res.status(400).send("No Users Found!")
+        res.status(200).json(users)
+    }catch(err){
+        console.log(err)
+        res.status(400).send("Error in fetching Users!")
+    }
+}
+
 export const register = async (req, res) => {
     // console.log(req.body)
     const {name, email, password} = req.body
