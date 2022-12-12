@@ -15,7 +15,7 @@ router.get("/property/:propertyId", getProperty)
 router.post("/properties/add", requireSignIn, addProperty)
 router.put("/properties/update/:id", requireSignIn, propertyOwner, updateProperty)
 router.put("/properties/status/:id", requireSignIn, propertyOwner, updatePropertyStatus)
-router.delete('/properties/delete/:id', requireSignIn, propertyOwner, deleteProperty)
+router.put('/properties/delete/:id', requireSignIn, propertyOwner, deleteProperty)
 
 //rooms
 router.get("/properties/:propertyId/rooms", getRooms)
