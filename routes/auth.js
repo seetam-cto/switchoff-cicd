@@ -21,7 +21,7 @@ router.post('/login', login)
 router.post('/admin/login', adminLogin)
 
 //user interactions
-router.post('user/register',requireSignIn, adminRegister)
+router.post('/user/register',requireSignIn, adminRegister)
 router.get('/user/all', getAllUsers)
 router.post('/user/update', requireSignIn, updateUser)
 router.put('/user/delete', requireSignIn, deactivateUser)
