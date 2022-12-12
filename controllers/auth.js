@@ -131,6 +131,8 @@ export const login = async (req, res) => {
         let user = await User.findOne({email: email}).exec()
         // console.log('User Exists', user)
         if(!user) res.status(400).send(`User with email ${email} not found!`)
+        //check active
+        if(!user.active) res.status(400).send("Ur Account has been deactivated!")
         // Compare password
         user.comparePassword(password, (err, match) => {
             console.log('COMPARE PASSWORD IN LOGIN ERR', err)
