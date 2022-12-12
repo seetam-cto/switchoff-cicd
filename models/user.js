@@ -51,6 +51,7 @@ const userSchema = new Schema({
 
 userSchema.pre('save', function(next) {
     let user = this
+    console.log("HASH UPDATE")
     if(user.isModified('password')){
         return bcrypt.hash(user.password, 12, function(err, hash){
             if(err){
@@ -67,23 +68,6 @@ userSchema.pre('save', function(next) {
                 return next(err)
             }
             user.passcode = hash
-            return next()
-        })
-    } else {
-        return next()
-    }
-    
-})
-
-userSchema.pre('update', function(next) {
-    let user = this
-    if(user.isModified('password')){
-        return bcrypt.hash(user.password, 12, function(err, hash){
-            if(err){
-                console.log("BCRYPT HASH ERR: ", err)
-                return next(err)
-            }
-            user.password = hash
             return next()
         })
     } else {

@@ -2,6 +2,7 @@ import User from "../models/user"
 import jwt from "jsonwebtoken"
 const sgMail = require('@sendgrid/mail')
 import crypto from "crypto"
+import bcrypt from "bcrypt"
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 export const register = async (req, res) => {
@@ -111,22 +112,29 @@ export const changePassword = async (req, res) => {
               `<div style="width: 100%;text-align: center;font-size: 30px;font-weight: bold;">${randomString.toUpperCase()}</div>` +
               '<br><br>Regards, <br>Team SwitchOff',
     }
-    try{
-        await User.findByIdAndUpdate(userExists._id, {passcode: randomString.toLowerCase(), passchange: true})
-        sgMail
-        .send(msg)
-        .then(() => {
-            console.log('Email sent')
-            res.status(200).send("You have received an OTP on email!")
-        })
-        .catch((error) => {
-            console.error(error)
-            res.status(400).send("Sendgrid Unsuccessful!")
-        })
-    }catch(err){
-        console.log(err)
-        res.status(400).send("Unsuccessful!")
-    }
+
+    bcrypt.hash(randomString.toLowerCase(), 12, async function(err, hash) {
+        if(err){
+            console.log("BCRYPT HASH ERR: ", err)
+        }
+        try{
+            await User.findByIdAndUpdate(userExists._id, {passcode: hash, passchange: true})
+            sgMail
+            .send(msg)
+            .then(() => {
+                console.log('Email sent')
+                res.status(200).send("You have received an OTP on email!")
+            })
+            .catch((error) => {
+                console.error(error)
+                res.status(400).send("Sendgrid Unsuccessful!")
+            })
+        }catch(err){
+            console.log(err)
+            res.status(400).send("Unsuccessful!")
+        }
+
+    })
 }
 
 //Password Management - Confirm Passcode
@@ -135,17 +143,18 @@ export const confirmPasscode = async (req, res) => {
     let {email, passcode} = body
     try{
         let passUser = await User.findOne({email: email})
-        if(passUser.passcode === passcode){
+        if(!passUser) res.status(400).send(`User with email ${email} not found!`)
+        passUser.comparePasscode(passcode.toLowerCase(), (err, match) => {
+            console.log('CONFIRM PASSCODE ERR', err)
+            if(!match || err) return res.status(400).send('Passcode doesn\'t match!')
             let token = jwt.sign({_id: passUser._id}, process.env.JWT_SECRET, {
                 expiresIn: '600s'
             })
             res.status(200).json({ token })
-        }else{
-            return res.status(400).json(false)
-        }
+        })
     }catch(err){
         console.log(err)
-        res.status(400).send("Unsuccessful!")
+        res.status(400).send("Passcode Confirm Unsuccessful!")
     }
 }
 
@@ -153,13 +162,18 @@ export const confirmPasscode = async (req, res) => {
 export const updatePassword = async (req, res) => {
     let {body, auth} = req
     let {password} = body
-    try{
-        await User.findByIdAndUpdate(auth._id, {password: password, passchange: false, passcode: ''})
-        res.status(200).send("Password Updated!")
-    }catch(err){
-        console.log(err)
-        res.status(400).send("Password Update Unsuccessful!")
-    }
+    bcrypt.hash(password, 12, async function(err, hash) {
+        if(err){
+            console.log("BCRYPT HASH ERR: ", err)
+        }
+        try{
+            await User.findByIdAndUpdate(auth._id, {password: hash, passchange: false, passcode: ''}, {new: true})
+            res.status(200).send("Password Updated!")
+        }catch(err){
+            console.log(err)
+            res.status(400).send("Password Update Unsuccessful!")
+        }
+    })
 }
 
 //User Profile Management - Update Profile
