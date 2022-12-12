@@ -24,7 +24,7 @@ router.post('/admin/login', adminLogin)
 router.post('/user/register',requireSignIn, adminRegister)
 router.get('/user/all', getAllUsers)
 router.post('/user/update', requireSignIn, updateUser)
-router.put('/user/delete', requireSignIn, deactivateUser)
+router.put('/user/delete/:id', requireSignIn, deactivateUser)
 
 //Premium Features
 router.post('/user/verification', requireSignIn, verifyUser)

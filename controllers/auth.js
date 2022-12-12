@@ -7,7 +7,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 export const getAllUsers = async (req, res) => {
     try{
-        let users = await User.find()
+        let users = await User.find({user_type: {$in: ["admin", "editor"]}})
         .select("-password")
         .select("-passcode")
         .select("-passchange")
@@ -244,7 +244,7 @@ export const updatePassword = async (req, res) => {
 //User Profile Management - Update Profile
 export const updateUser = async (req, res) => {
     // console.log(req.body)
-    const {id, name, email, password, profile_image, user_type} = req.body
+    const {id, name, email, password, user_type} = req.body
     //validation
     if(!email) return res.status(400).send('Email is required!')
     if(!password || password.length < 8) return res.status(400).send('Password is required and should be 8 characters long!')
@@ -253,7 +253,7 @@ export const updateUser = async (req, res) => {
         name,
         email,
         password,
-        profile_image,
+        profile_image: req.body.profile_image ? req.body.profile_image : "",
         user_type
     }
 
@@ -268,7 +268,13 @@ export const updateUser = async (req, res) => {
 
 //User Profile Management - Deactivate Profile
 export const deactivateUser = async (req, res) => {
-    res.status(200).send("User Deactivated")
+    try{
+        let updated = await User.findByIdAndUpdate(req.params.id, {active: false}, {new: true})
+        return res.status(200).json(updated)
+    }catch(err){
+        console.log('DEACTIVATE USER FAILED: ', err)
+        return res.status(400).send('Deactivate User Failed!')
+    }
 }
 
 //Premium Features - Verify Profile
