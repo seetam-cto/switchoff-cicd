@@ -35,7 +35,7 @@ const userSchema = new Schema({
         max: 100
     },
     profile_image: {
-        type: Buffer
+        type: String
     },
     passchange: {
         type: Boolean,
