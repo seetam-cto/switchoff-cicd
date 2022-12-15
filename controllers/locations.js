@@ -1,10 +1,31 @@
-import Location from "../models/location";
+import Location from "../models/location"
+import Property from "../models/property"
 
 export const getAllLocations = async (req, res) => {
     try{
         let locations = await Location.find().exec()
         if(!locations) return res.status(400).send("No Locations Found!")
         res.status(200).json(locations)
+    }catch(err){
+        console.log(err)
+        res.status(200).send("Error in Fetching Locations")
+    }
+} 
+
+export const getAllPropertyLocations = async (req, res) => {
+    let locType = req.params.ptype
+    try{
+        let properties = await Property.find()
+        .select(`nameLocation.address.${locType}`)
+        .exec()
+        if(!properties) return res.status(400).send("No Locations Found!")
+        let result = []
+        if(locType === "locality"){
+            result = properties.map((p) => p.nameLocation.address.locality)
+        }else if(locType === "state"){
+            result = properties.map((p) => p.nameLocation.address.state)
+        }
+        res.status(200).json(result)
     }catch(err){
         console.log(err)
         res.status(200).send("Error in Fetching Locations")
