@@ -25,7 +25,8 @@ export const getAllPropertyLocations = async (req, res) => {
         }else if(locType === "state"){
             result = properties.map((p) => p.nameLocation.address.state)
         }
-        res.status(200).json(result)
+        let sresult = new Set(result)
+        res.status(200).json(sresult)
     }catch(err){
         console.log(err)
         res.status(200).send("Error in Fetching Locations")
