@@ -65,7 +65,7 @@ export const addLocation = async (req, res) => {
     }catch(err){
         if(err.code == 11000){
             console.log(err)
-            res.status(400).send("Country Already Exists")
+            res.status(400).send("Location Already Exists")
         }else{
             console.log(err)
             res.status(400).send("Couldn't add Location!")
@@ -73,10 +73,23 @@ export const addLocation = async (req, res) => {
     }
 } 
 
-export const updateLocation = () => {
-    return true
+export const updateLocation = async (req, res) => {
+    let {body, params} = req
+    try{
+        let updated = await Location.findByIdAndUpdate(params.id, body, {new: true})
+        res.status(200).json(updated)
+    }catch(err){
+        console.log(err)
+        res.status(400).send("Location Update Failed!")
+    }
 } 
 
-export const deleteLocation = () => {
-    return true
+export const deleteLocation = async(req, res) => {
+    try{
+        let deleted = await Location.findByIdAndDelete(req.params.id)
+        res.status(200).json(deleted)
+    }catch(err){
+        console.log(err)
+        res.status(400).send("Location Deleted!")
+    }
 } 
