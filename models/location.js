@@ -13,9 +13,9 @@ const locationSchema = new Schema({
     cover_image: {
         type: String
     },
-    lat_lon: {
+    lat_lng: {
         lat: String,
-        lon: String
+        lng: String
     },
     createdBy: {
         type: ObjectId,
