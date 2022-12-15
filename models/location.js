@@ -23,6 +23,6 @@ const locationSchema = new Schema({
     }
 }, {timestamps: true})
 
-locationSchema.index({name: 1, lat_lng: {lat: 1, lng: 1}}, {unique: true})
+locationSchema.index({name: 1, lat_lng: 1}, {unique: true})
 
 export default mongoose.model("Location", locationSchema)
