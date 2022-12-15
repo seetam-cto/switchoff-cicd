@@ -21,9 +21,9 @@ export const getAllPropertyLocations = async (req, res) => {
         if(!properties) return res.status(400).send("No Locations Found!")
         let result = []
         if(locType === "locality"){
-            result = properties.map((p) => p.nameLocation.address.locality)
+            result = new Set(properties.map((p) => p.nameLocation.address.locality))
         }else if(locType === "state"){
-            result = properties.map((p) => p.nameLocation.address.state)
+            result = new Set(properties.map((p) => p.nameLocation.address.state))
         }
         res.status(200).json(result)
     }catch(err){
