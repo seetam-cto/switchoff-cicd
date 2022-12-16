@@ -72,8 +72,8 @@ export const getBanners = async (req, res) => {
         .exec()
         if(!banners) return res.status(400).send("Banners not found!")
         let properties = await Property.find().select("nameLocation.address").exec()
-        let newProps = properties.map((prp) => ({locality: prp.nameLocation.address.locality, state: prp.nameLocation.address.state}))
-        let result = {banners, newProps}
+        let propCount = properties.map((prp) => ({locality: prp.nameLocation.address.locality, state: prp.nameLocation.address.state}))
+        let result = {banners, propCount}
         res.status(200).json(result)
     }catch(err){
         console.log(err)
