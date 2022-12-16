@@ -38,8 +38,11 @@ const cmsSchema = new Schema({
             card: String,
             title: String,
             subTitle: String,
-            propertyCount: String,
             link: String,
+            location: {
+                type: ObjectId,
+                ref: "Location"
+            }
         }],
         deals: {
             title: String,
@@ -60,7 +63,11 @@ const cmsSchema = new Schema({
             enabled: {
                 type: Boolean,
                 default: true
-            }
+            },
+            list: [{
+                type: ObjectId,
+                ref: "Location"
+            }]
         },
         advanceBooking: {
             title: String,
