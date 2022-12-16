@@ -33,7 +33,6 @@ const cmsSchema = new Schema({
         }
     },
     homepage: {
-        banner: [],
         deals: {
             title: String,
             subTitle: String,
