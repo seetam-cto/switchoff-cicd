@@ -33,17 +33,7 @@ const cmsSchema = new Schema({
         }
     },
     homepage: {
-        banner: [{
-            background: String,
-            card: String,
-            title: String,
-            subTitle: String,
-            link: String,
-            location: {
-                type: ObjectId,
-                ref: "Location"
-            }
-        }],
+        banner: [],
         deals: {
             title: String,
             subTitle: String,
