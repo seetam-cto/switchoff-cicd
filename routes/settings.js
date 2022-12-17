@@ -11,7 +11,7 @@ router.put("/settings/update/:id", requireSignIn, allowedSettings, updateSetting
 
 //banners
 router.get("/settings/banners", getBanners)
-router.post("settings/banners/add", requireSignIn, addBanner)
+router.post("/settings/banners/add", requireSignIn, addBanner)
 router.put("/settings/banners/update/:id", requireSignIn, updateBanner)
 router.delete("/settings/banners/delete/:id", requireSignIn, deleteBanner)
 

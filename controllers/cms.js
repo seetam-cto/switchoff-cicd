@@ -54,16 +54,7 @@ export const updateSettings = async (req, res) => {
     }
 }
 
-// export const updateBanner = async (req, res) => {
-//     let {body, params} = req
-//     try{
-//         let settings = await CMS.findByIdAndUpdate(params.id, 
-//             {
-//                 homepage : {
-//                     banner}
-//             }, {new: true})
-//     }
-// }
+//banners
 
 export const getBanners = async (req, res) => {
     try{
