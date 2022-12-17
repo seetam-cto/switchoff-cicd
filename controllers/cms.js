@@ -6,7 +6,6 @@ import Banner from "../models/banner"
 export const getSettings = async (req, res) => {
     try{
         let settings = await CMS.find()
-        .populate("homepage.banner")
         .populate({
             path: "homepage.deals",
             populate: {
