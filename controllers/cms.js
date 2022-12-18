@@ -82,6 +82,7 @@ export const addBanner = async (req, res) => {
         await banner.save()
         return res.status(200).json(banner)
     }catch(err){
+        console.log(err)
         res.status(400).send("Couldn't Add Banner")
     }
 }
