@@ -75,6 +75,7 @@ export const addBanner = async (req, res) => {
     let {auth, body} = req
     const bannerData = {
         ...body,
+        location: body.location ? body.location : null,
         createdBy: auth._id
     }
     const banner = new Banner(bannerData)
