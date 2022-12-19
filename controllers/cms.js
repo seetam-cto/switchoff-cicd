@@ -69,11 +69,11 @@ export const getSettings = async (req, res) => {
                 if(!result) return res.status(400).send("General Setting not found!")
                 break;
             case "homepage":
-                res = await SettingHomepage.find().limit(1);
+                result = await SettingHomepage.find().limit(1);
                 if(!result) return res.status(400).send("Homepage Setting not found!")
                 break;
             case "footer":
-                res = await SettingFooter.find().limit(1);
+                result = await SettingFooter.find().limit(1);
                 if(!result) return res.status(400).send("Footer Setting not found!");
                 break;
             default:
