@@ -79,6 +79,7 @@ export const addExperience = async (req, res) => {
         await experience.save()
         return res.status(200).json(experience)
     }catch(err){
+        console.log(err)
         res.status(400).send("Couldn't add Experience!")
     }
 }
