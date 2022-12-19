@@ -13,9 +13,9 @@ router.post("/settings/add/:type", requireSignIn, isAdmin, addSettings)
 router.put("/settings/update/:type/:id", requireSignIn, isAdmin, updateSettings)
 
 //banners
-router.get("/settings/banners", getBanners)
-router.post("/settings/banners/add", requireSignIn, addBanner)
-router.put("/settings/banners/update/:id", requireSignIn, updateBanner)
-router.delete("/settings/banners/delete/:id", requireSignIn, deleteBanner)
+router.get("/banners", getBanners)
+router.post("/banners/add", requireSignIn, addBanner)
+router.put("/banners/update/:id", requireSignIn, updateBanner)
+router.delete("/banners/delete/:id", requireSignIn, deleteBanner)
 
 module.exports = router
