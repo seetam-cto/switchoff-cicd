@@ -3,7 +3,7 @@ import { requireSignIn } from "../middlewares"
 import { 
     getPropertyTypes, addPropertyType, updatePropertyType,
     getAmenities, addAmenity, updateAmenity,
-    getExperiences, addExperience, updateExperience, deletePropertyType
+    getExperiences, addExperience, updateExperience, deletePropertyType, deleteExperience
 } from "../controllers/attributes"
 
 const router = express.Router()
@@ -18,7 +18,7 @@ router.delete("/attributes/property-type/:id", requireSignIn, deletePropertyType
 router.get("/attributes/experience", getExperiences)
 router.post("/attributes/experience/add", requireSignIn, addExperience)
 router.put("/attributes/experience/update/:id", requireSignIn, updateExperience)
-// router.delete("/locations/delete/:id", requireSignIn, deleteLocation)
+router.delete("/attributes/experience/delete/:id", requireSignIn, deleteExperience)
 
 //amenities
 router.get("/attributes/amenity", getAmenities)

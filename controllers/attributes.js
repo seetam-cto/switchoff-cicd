@@ -1,6 +1,7 @@
 import PropertyType from "../models/proptype";
 import Amenity from "../models/amenity"
 import Experience from "../models/experience";
+import CMS from "../models/cms";
 
 //property type
 export const getPropertyTypes = async (req, res) => {
@@ -90,6 +91,22 @@ export const updateExperience = async (req, res) => {
     }catch(err){
         console.log(err)
         res.status(400).send("Experience Update Failed!")
+    }
+}
+
+export const deleteExperience = async (req, res) => {
+    let {params} = req
+    try{
+        let settings = await CMS.find().exec()
+        if(settings[0].homepage.experiences.list.includes(params.id)){
+            res.status(400).send("Experience is in use. Can't be deleted! Please check for uses!")
+        }else{
+            let deleted = await Experience.findByIdAndDelete(params.id)
+            res.status(200).json(deleted)
+        }
+    }catch(err){
+        console.log(err)
+        res.status(400).send("Experience Delete Failed!")
     }
 }
 
