@@ -16,6 +16,7 @@ const cmsSchema = new Schema({
         colours: {
             primary: String,
             secondary: String,
+            accent: String,
             text: String
         },
         social: {
@@ -35,12 +36,8 @@ const cmsSchema = new Schema({
     homepage: {
         deals: {
             title: String,
-            subTitle: String,
-            list: [{
-                    type: ObjectId,
-                    ref: "Property"
-                }],
-            dealTitle: [String],
+            subTitle: String, 
+            list: [],
             enabled: {
                 type: Boolean,
                 default: true
@@ -58,16 +55,27 @@ const cmsSchema = new Schema({
                 ref: "Location"
             }]
         },
-        advanceBooking: {
+        locationProps: {
             title: String,
             subTitle: String,
-            image: String,
-            list: [{
-                icon: String,
-                title: String,
-                subTitle: String
-            }],
-            link: String,
+            list: [],
+            enabled: {
+                type: Boolean,
+                default: true
+            }
+        },
+        reviews: {
+            title: String,
+            list: [],
+            enabled: {
+                type: Boolean,
+                default: true
+            }
+        },
+        popularDestination: {
+            title: String,
+            subTitle: String,
+            list: [],
             enabled: {
                 type: Boolean,
                 default: true
@@ -81,22 +89,25 @@ const cmsSchema = new Schema({
                 ref: "Experience"
             }]
         },
-        questions: {
+        partners: {
             title: String,
-            subTitle: String,
-            image: String,
-            enabled: {
-                type: Boolean,
-                default: true
-            }
-        },
+            list: []
+        }
     },
     footer: {
         logo: String,
-        quickLinks: [{
-            link: String,
-            text: String
-        }]
+        link1: {
+            title: String,
+            list: []
+        },
+        link2: {
+            title: String,
+            list: []
+        },
+        link3: {
+            title: String,
+            list: []
+        },
     },
     allowed: [{
         type: ObjectId,

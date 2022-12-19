@@ -20,6 +20,14 @@ export const propertyOwner = async (req, res, next) => {
     next()
 }
 
+export const isAdmin = async (req, res, next) => {
+    let user = await User.findById(req.auth._id)
+    if(!user.user_type === "admin"){
+        return res.status(403).send("Unauthorized!")
+    }
+    next()
+}
+
 export const roomOwner = async (req, res, next) => {
     let room = await Room.findById(req.params.roomId).exec()
     let user = await User.findById(req.auth._id)
