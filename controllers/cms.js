@@ -78,7 +78,10 @@ export const getSettings = async (req, res) => {
                 break;
             case "all":
                 let general = await SettingGeneral.find().limit(1)
-                let homepage = await SettingHomepage.find().limit(1)
+                let homepage = await SettingHomepage.find()
+                .populate("experiences.list")
+                .populate("locations.list")
+                .limit(1)
                 let footer = await SettingFooter.find().limit(1)
                 result = {general: general[0], homepage: homepage[0], footer:  footer[0]}
                 if(!result) return res.status(400).send("Settings not found!")
