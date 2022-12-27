@@ -10,7 +10,7 @@ export const getBlogs = async (req, res) => {
         .populate("experiences")
         .exec()
         if(!blogs) return res.status(400).send("No Blogs Found!")
-        res.status(200).json(result)
+        res.status(200).json(blogs)
     }catch(err){
         console.log(err)
         res.status(400).send("Error in fetching Blogs!")
@@ -24,7 +24,7 @@ export const getBlog = async (req, res) => {
         .populate("experiences")
         .exec()
         if(!blog) return res.status(400).send("Blog not Found!")
-        res.status(200).json(result)
+        res.status(200).json(blog)
     }catch(err){
         console.log(err)
         res.status(400).send("Error in fetching Blog!")
