@@ -3,7 +3,10 @@ const {Schema} = mongoose
 const {ObjectId} = mongoose.Schema
 
 const blogSchema = new Schema({
-    title: String,
+    title: {
+        type: String,
+        required: "Title is required!"
+    },
     slug: {
         type: String,
         unique: true
@@ -14,10 +17,14 @@ const blogSchema = new Schema({
         editedOn: Date,
     }],
     seo: {
+        cover: String,
         description: String,
-        tags: [],
         cover: String,
     },
+    tags: [{
+        type: ObjectId,
+        ref: "Tag"
+    }],
     properties: [{
         type: ObjectId,
         ref: "Property"

@@ -1,13 +1,16 @@
 import banner from "../models/banner";
 import Blog from "../models/blog";
+import Tag from "../models/tag";
 
 
 //get Blogs
 export const getBlogs = async (req, res) => {
     try{
         let blogs = await Blog.find()
+        .select("-content")
         .populate("properties")
         .populate("experiences")
+        .populate("tags")
         .exec()
         if(!blogs) return res.status(400).send("No Blogs Found!")
         res.status(200).json(blogs)
@@ -69,6 +72,7 @@ export const trashBlog = async (req, res) => {
         res.status(400).send("Couldn't Delete Blog")
     }
 }
+
 export const deleteBlog = async (req, res) => {
     let {params} = req
     try{
@@ -77,5 +81,34 @@ export const deleteBlog = async (req, res) => {
     }catch(err){
         console.log(err)
         res.status(400).send("Couldn't Delete Blog")
+    }
+}
+
+//Tags
+
+export const getTags = async (req, res) => {
+    try{
+        let tag = await Tag.find().exec()
+        if(!tag) return res.status(400).send("No Tags Found!")
+        res.status(200).json(tag)
+    }catch(err){
+        console.log(err)
+        res.status(400).send("Error in fetching Tags!")
+    }
+}
+
+export const addTag = async (req, res) => {
+    let {auth, body} = req
+    const tagData = {
+        ...body,
+        createdBy: auth._id
+    }
+    const tag = new Tag(tagData)
+    try{
+        await tag.save()
+        return res.status(200).json(tag)
+    }catch(err){
+        console.log(err)
+        res.status(400).send("Couldn't Add Tag")
     }
 }
