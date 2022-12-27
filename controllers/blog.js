@@ -33,10 +33,16 @@ export const getBlog = async (req, res) => {
         let blog = await Blog.findById(req.params.id)
         .populate("properties")
         .populate("experiences")
+        .populate("tags")
+        .populate("postedBy")
         .populate("content.editedBy")
         .exec()
         if(!blog) return res.status(400).send("Blog not Found!")
-        res.status(200).json(blog)
+        let result = {
+                ...blog._doc,
+                content: blog.content.sort((a,b) => b.version - a.version)
+            }
+        res.status(200).json(result)
     }catch(err){
         console.log(err)
         res.status(400).send("Error in fetching Blog!")
