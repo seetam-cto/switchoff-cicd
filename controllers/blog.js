@@ -11,6 +11,7 @@ export const getBlogs = async (req, res) => {
         .populate("properties")
         .populate("experiences")
         .populate("tags")
+        .populate("postedBy")
         .exec()
         if(!blogs) return res.status(400).send("No Blogs Found!")
         res.status(200).json(blogs)
