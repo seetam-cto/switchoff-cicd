@@ -49,7 +49,7 @@ export const allowedSettings = async (req, res, next) => {
 
 export const isAuthor = async (req, res, next) => {
     let auther = await User.findById(req.auth._id)
-    if(auther.user_type !== "admin" || auther.user_type !== "author" || auther.user_type !== "editor" ){
+    if(!["admin","editor","author"].includes(auther.user_type)){
         return res.status(403).send("Unauthorized!")
     }
     next()

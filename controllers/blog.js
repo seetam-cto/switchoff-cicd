@@ -7,14 +7,21 @@ import Tag from "../models/tag";
 export const getBlogs = async (req, res) => {
     try{
         let blogs = await Blog.find()
-        .select("-content")
         .populate("properties")
         .populate("experiences")
         .populate("tags")
         .populate("postedBy")
+        .populate("content.editedBy")
+        .select("-content.data")
         .exec()
         if(!blogs) return res.status(400).send("No Blogs Found!")
-        res.status(200).json(blogs)
+        let result = blogs.map((blog) => {
+            return {
+                ...blog._doc,
+                content: blog.content.sort((a,b) => b.version - a.version)
+            }
+        })
+        res.status(200).json(result)
     }catch(err){
         console.log(err)
         res.status(400).send("Error in fetching Blogs!")
@@ -26,6 +33,7 @@ export const getBlog = async (req, res) => {
         let blog = await Blog.findById(req.params.id)
         .populate("properties")
         .populate("experiences")
+        .populate("content.editedBy")
         .exec()
         if(!blog) return res.status(400).send("Blog not Found!")
         res.status(200).json(blog)
@@ -39,6 +47,11 @@ export const addBlog = async (req, res) => {
     let {auth, body} = req
     const blogData = {
         ...body,
+        content: [{
+            data: body.content,
+            version: 0,
+            editedBy: auth._id
+        }],
         postedBy: auth._id
     }
 
@@ -47,15 +60,34 @@ export const addBlog = async (req, res) => {
         await blog.save()
         return res.status(200).json(blog)
     }catch(err){
-        console.log(err)
-        res.status(400).send("Couldn't Add Blog")
+        if(err.code === 11000){
+            res.status(400).send("Please use unique slugs")
+        }else{
+            console.log(err)
+            res.status(400).send("Couldn't Add Blog")
+        }
     }
 }
 
 export const updateBlog = async (req, res) => {
-    let {body, params} = req
+    let {auth, body, params} = req
     try{
-        let updated = await Blog.findByIdAndUpdate(params.id, body, {new: true})
+        let theblog = await Blog.findById(params.id)
+        let allversions = theblog.content
+        let latestVersion = allversions.sort((a,b) => b.version - a.version)[0].version
+        let newBlogData = {
+            ...body,
+            content: [
+                {
+                    data: body.content,
+                    version: latestVersion + 1,
+                    editedBy: auth._id
+                },
+                ...theblog.content,
+                
+            ]
+        }
+        let updated = await Blog.findByIdAndUpdate(params.id, newBlogData, {new: true})
         res.status(200).json(updated)
     }catch(err){
         console.log(err)

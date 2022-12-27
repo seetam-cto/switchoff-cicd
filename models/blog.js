@@ -15,11 +15,15 @@ const blogSchema = new Schema({
         version: Number,
         data: {},
         editedOn: Date,
+        editedBy: {
+            type: ObjectId,
+            ref: "User"
+        }
     }],
     seo: {
         cover: String,
         description: String,
-        cover: String,
+        keywords: String
     },
     tags: [{
         type: ObjectId,
