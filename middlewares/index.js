@@ -3,6 +3,7 @@ import Property from "../models/property"
 import Room from "../models/room"
 import CMS from "../models/cms"
 import User from "../models/user"
+import Blog from "../models/blog"
 
 export const requireSignIn = expressjwt({
     //secret, expiryDate
@@ -41,6 +42,14 @@ export const roomOwner = async (req, res, next) => {
 export const allowedSettings = async (req, res, next) => {
     let owner = await User.findById(req.auth._id)
     if(owner.user_type !== "admin"){
+        return res.status(403).send("Unauthorized!")
+    }
+    next()
+}
+
+export const isAuthor = async (req, res, next) => {
+    let auther = await User.findById(req.auth._id)
+    if(auther.user_type !== "admin" || auther.user_type !== "author" || auther.user_type !== "editor" ){
         return res.status(403).send("Unauthorized!")
     }
     next()
