@@ -9,7 +9,8 @@ const blogSchema = new Schema({
     },
     slug: {
         type: String,
-        unique: true
+        unique: true,
+        required: "Slug is required!"
     },
     content: [{
         version: Number,
