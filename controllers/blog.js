@@ -56,7 +56,8 @@ export const addBlog = async (req, res) => {
         content: [{
             data: body.content,
             version: 0,
-            editedBy: auth._id
+            editedBy: auth._id,
+            editedOn: new Date()
         }],
         postedBy: auth._id
     }
@@ -87,7 +88,8 @@ export const updateBlog = async (req, res) => {
                 {
                     data: body.content,
                     version: latestVersion + 1,
-                    editedBy: auth._id
+                    editedBy: auth._id,
+                    editedOn: new Date()
                 },
                 ...theblog.content,
                 
