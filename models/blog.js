@@ -15,7 +15,10 @@ const blogSchema = new Schema({
     content: [{
         version: Number,
         data: {},
-        editedOn: Date,
+        editedOn: {
+            type: Date,
+            default: new Date()
+        },
         editedBy: {
             type: ObjectId,
             ref: "User"
