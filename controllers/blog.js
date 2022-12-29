@@ -117,11 +117,22 @@ export const updateBlog = async (req, res) => {
 export const trashBlog = async (req, res) => {
     let {params} = req
     try{
-        let trashed = await Blog.findByIdAndUpdate(params.id, {trash: true}, {new: true})
+        let trashed = await Blog.findByIdAndUpdate(params.id, {trash: true, published: false}, {new: true})
         res.status(200).send(`Blog ${trashed.title} Trashed!`)
     }catch(err){
         console.log(err)
         res.status(400).send("Couldn't Delete Blog")
+    }
+}
+
+export const restoreBlog = async (req, res) => {
+    let {params} = req
+    try{
+        let trashed = await Blog.findByIdAndUpdate(params.id, {trash: false}, {new: true})
+        res.status(200).send(`Blog ${trashed.title} Restoredd!`)
+    }catch(err){
+        console.log(err)
+        res.status(400).send("Couldn't Restore Blog")
     }
 }
 
