@@ -117,7 +117,7 @@ export const updateBlog = async (req, res) => {
 export const trashBlog = async (req, res) => {
     let {params} = req
     try{
-        let trashed = await banner.findByIdAndUpdate(params.id, {trash: true}, {new: true})
+        let trashed = await Blog.findByIdAndUpdate(params.id, {trash: true}, {new: true})
         res.status(200).send(`Blog ${trashed.title} Trashed!`)
     }catch(err){
         console.log(err)
@@ -128,7 +128,7 @@ export const trashBlog = async (req, res) => {
 export const deleteBlog = async (req, res) => {
     let {params} = req
     try{
-        let deleted = await banner.findByIdAndDelete(params.id)
+        let deleted = await Blog.findByIdAndDelete(params.id)
         res.status(200).send(`Blog ${deleted.title} deleted!`)
     }catch(err){
         console.log(err)
