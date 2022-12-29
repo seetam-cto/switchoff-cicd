@@ -82,19 +82,30 @@ export const updateBlog = async (req, res) => {
         let theblog = await Blog.findById(params.id)
         let allversions = theblog.content
         let latestVersion = allversions.sort((a,b) => b.version - a.version)[0].version
-        let newBlogData = {
-            ...body,
-            content: [
-                {
-                    data: body.content,
-                    version: latestVersion + 1,
-                    editedBy: auth._id,
-                    editedOn: new Date()
-                },
-                ...theblog.content,
-                
-            ]
+
+        let newBlogData = null
+        if(allversions.sort((a,b) => b.version - a.version)[0].data === body.content){
+            newBlogData = {
+                ...body,
+                content: [
+                    ...theblog.content
+                ]
+            }
+        }else{
+            newBlogData = {
+                ...body,
+                content: [
+                    {
+                        data: body.content,
+                        version: latestVersion + 1,
+                        editedBy: auth._id,
+                        editedOn: new Date()
+                    },
+                    ...theblog.content,
+                ]
+            }    
         }
+
         let updated = await Blog.findByIdAndUpdate(params.id, newBlogData, {new: true})
         res.status(200).json(updated)
     }catch(err){
