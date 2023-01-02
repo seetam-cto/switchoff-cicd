@@ -60,8 +60,8 @@ export const getBlogBySlug = async (req, res) => {
         .exec()
         if(!blog) return res.status(400).send("Blog not Found!")
         let result = {
-                ...blog._doc,
-                content: blog.content.sort((a,b) => b.version - a.version)
+                ...blog[0]._doc,
+                content: blog[0].content.sort((a,b) => b.version - a.version)
             }
         res.status(200).json(result)
     }catch(err){
