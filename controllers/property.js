@@ -5,7 +5,7 @@ import Calender from "../models/calender";
 export const getProperties = async (req, res) => {
     try{
         let properties = await Property.find({deleted: false})
-        .populate("createdBy")
+        .populate("createdBy", "_id name email createdAt updatedAt")
         .exec();
         if(!properties) return res.status(400).send("No Properties Found!")
         res.status(200).json(properties)
@@ -88,7 +88,7 @@ export const getRooms = async (req, res) => {
     try{
         let rooms = await Room.find({propertyId: req.params.propertyId, status: {$gt : -2}})
         .populate("propertyId")
-        .populate("createdBy")
+        .populate("createdBy", "_id name email createdAt updatedAt")
         .exec();
         if(!rooms) return res.status(400).send("No Rooms Found!")
         res.status(200).json(rooms)
@@ -102,7 +102,7 @@ export const getRoom = async (req, res) => {
     try{
         let room = await Room.findById(req.params.roomId)
                     .populate("propertyId")
-                    .populate("createdBy")
+                    .populate("createdBy", "_id name email createdAt updatedAt")
                     .exec();
         if(!room) return res.status(400).send("Room Details Found!")
         res.status(200).json(room)
