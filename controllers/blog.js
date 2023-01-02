@@ -49,6 +49,27 @@ export const getBlog = async (req, res) => {
     }
 }
 
+export const getBlogBySlug = async (req, res) => {
+    try{
+        let blog = await Blog.find({slug: req.params.slug})
+        .populate("properties")
+        .populate("experiences")
+        .populate("tags")
+        .populate("postedBy")
+        .populate("content.editedBy")
+        .exec()
+        if(!blog) return res.status(400).send("Blog not Found!")
+        let result = {
+                ...blog._doc,
+                content: blog.content.sort((a,b) => b.version - a.version)
+            }
+        res.status(200).json(result)
+    }catch(err){
+        console.log(err)
+        res.status(400).send("Error in fetching Blog!")
+    }
+}
+
 export const addBlog = async (req, res) => {
     let {auth, body} = req
     const blogData = {
