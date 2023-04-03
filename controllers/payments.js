@@ -41,7 +41,6 @@ export const handlePaymentConfig = async (req, res) => {
                 res.status(400).send("Payment Initialization Failed!")
             }
         }else{
-            console.log(result)
             let updated = await PaymentConfig.findByIdAndUpdate(result[0]._id, body, {new: true})
             return res.status(200).json(updated)
         }
