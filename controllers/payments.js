@@ -30,7 +30,7 @@ export const handlePaymentConfig = async (req, res) => {
     let {body} = req
     try{
         let result = await PaymentConfig.find()
-        if(!result){
+        if(result.length == 0){
             let sampleData = body
             const initPayConfig = new PaymentConfig(sampleData)
             try{
