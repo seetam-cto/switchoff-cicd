@@ -20,7 +20,7 @@ export const getPaymentMethods = async (req, res) => {
     const cryptr = new Cryptr(process.env.PAY_SECRET)
     try{
         let result = await PaymentConfig.find()
-        if(result.length === 0) return res.status(400).send("No Payment Config Found!")
+        if(result.length === 0) return res.status(400).send("No Payment Configuration Found!")
         res.status(200).json(cryptr.encrypt(JSON.stringify(result[0])))
     }catch(err){
         console.log(err)
