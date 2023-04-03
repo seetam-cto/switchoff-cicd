@@ -15,6 +15,10 @@ const calendarSchema = new Schema({
         type: ObjectId,
         ref: "Room"
     },
+    available: {
+        type: Boolean,
+        default: true
+    },
     createdBy: {
         type: ObjectId,
         ref: "User"
