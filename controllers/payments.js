@@ -18,8 +18,8 @@ export const confirmPayment = async (req, res) => {
 export const getPaymentMethods = async (req, res) => {
     try{
         let result = await PaymentConfig.find()
-        if(!result) return res.status(400).send("No Payment Config Found!")
-        res.status(200).json(result)
+        if(result.length === 0) return res.status(400).send("No Payment Config Found!")
+        res.status(200).json(result[0])
     }catch(err){
         console.log(err)
         res.status(200).send("Error in Fetching Payment Config!")
