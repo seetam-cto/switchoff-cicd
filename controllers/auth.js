@@ -274,7 +274,7 @@ export const verifyUser = async (req, res) => {
 
 //Vendor Registration
 export const vendorRegister = async (req, res) => {
-    const {name, email, phone, password} = req.body
+    const {email, password} = req.body
     //validation
     if(!email) return res.status(400).send('Email is required!')
     if(!password || password.length < 8) return res.status(400).send('Password is required and should be 8 characters long!')
