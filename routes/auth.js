@@ -10,7 +10,9 @@ import {
     verifyUser,
     adminLogin,
     getAllUsers,
-    adminRegister
+    adminRegister,
+    vendorRegister,
+    vendorLogin
 } from "../controllers/auth"
 import { requireSignIn } from "../middlewares"
 
@@ -25,6 +27,10 @@ router.post('/user/register',requireSignIn, adminRegister)
 router.get('/user/all', getAllUsers)
 router.post('/user/update/:id', requireSignIn, updateUser)
 router.put('/user/delete/:id', requireSignIn, deactivateUser)
+
+//vendor registration
+router.post('/vendor/register', vendorRegister)
+router.post('/vendor/login', vendorLogin)
 
 //Premium Features
 router.post('/user/verification', requireSignIn, verifyUser)

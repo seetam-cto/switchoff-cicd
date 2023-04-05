@@ -1,4 +1,5 @@
 import User from "../models/user"
+import Vendor from "../models/vendor"
 import jwt from "jsonwebtoken"
 const sgMail = require('@sendgrid/mail')
 import crypto from "crypto"
@@ -269,4 +270,61 @@ export const deactivateUser = async (req, res) => {
 //Premium Features - Verify Profile
 export const verifyUser = async (req, res) => {
     res.status(200).send("User Deactivated")
+}
+
+//Vendor Registration
+export const vendorRegister = async (req, res) => {
+    const {name, email, phone, password} = req.body
+    //validation
+    if(!email) return res.status(400).send('Email is required!')
+    if(!password || password.length < 8) return res.status(400).send('Password is required and should be 8 characters long!')
+
+    let userExists = await Vendor.findOne({email: email})
+    if(userExists) return res.status(400).send('Account already exists')
+
+    //register
+    const user = new Vendor({...req.body, user_type: "vendor"})
+    try{
+        await user.save()
+        console.log('USER CREATED', user)
+        return res.status(200).json({ok: true})
+    }catch(err){
+        console.log('CREATE USER FAILED: ', err)
+        return res.status(400).send('Error. Try Again.')
+    }
+}
+
+//Vendor Login
+export const vendorLogin = async (req, res) => {
+    const {email, password} = req.body
+    try{
+        //check if email exists
+        let user = await Vendor.findOne({email: email}).exec()
+        // console.log('User Exists', user)
+        if(!user) res.status(400).send(`User with email ${email} not found!`)
+        //check active
+        if(!user.active) res.status(400).send("Your Account has been deactivated!")
+        // Compare password
+        user.comparePassword(password, (err, match) => {
+            console.log('COMPARE PASSWORD IN LOGIN ERR', err)
+            if(!match || err) return res.status(400).send('Password doesn\'t match!')
+            let token = jwt.sign({_id: user._id}, process.env.JWT_SECRET, {
+                expiresIn: '7d'
+            })
+            res.status(200).json({ token, user: {
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                phone_number: user.phone_number,
+                profile_image: user.profile_image,
+                user_type: user.user_type,
+                createdAt: user.createdAt,
+                updatedAt: user.updatedAt
+            } })
+        })
+        
+    }catch(err){
+        console.log('Login Error: ', err)
+        res.status(400).send("Signin Failed!")
+    }
 }
