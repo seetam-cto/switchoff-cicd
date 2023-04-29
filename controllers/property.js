@@ -1,10 +1,13 @@
 import Property from "../models/property"
 import Room from "../models/room";
 import Calender from "../models/calender";
+import Tag from "../models/tag"
+import property from "../models/property";
 
 export const getProperties = async (req, res) => {
     try{
         let properties = await Property.find({deleted: false})
+        .populate("tags")
         .populate("createdBy", "_id name email createdAt updatedAt")
         .exec();
         if(!properties) return res.status(400).send("No Properties Found!")
@@ -195,4 +198,28 @@ export const handleRoomPrice = async (req, res) => {
             }
         }
     }
+}
+
+export const addTag = async (req, res) => {
+    let {auth, body} = req
+    const tagData = {
+        ...body,
+        createdBy: auth._id
+    }
+    const tag = new Tag(tagData)
+    try{
+        await tag.save()
+        return res.status(200).json(property)
+    }catch(err){
+        console.log(err)
+        if(err.code == 11000){
+            res.status(400).send("Tag Already Exists")
+        }else{
+            res.status(400).send("Couldn't add Tag!")
+        }
+    }
+}
+
+export const enquire = async (req, res) => {
+    
 }

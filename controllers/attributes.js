@@ -1,7 +1,9 @@
 import PropertyType from "../models/proptype";
 import Amenity from "../models/amenity"
+import Property from "../models/property";
 import Experience from "../models/experience";
 import CMS from "../models/cms";
+import Tag from "../models/tag"
 
 //property type
 export const getPropertyTypes = async (req, res) => {
@@ -152,5 +154,48 @@ export const updateAmenity = async (req, res) => {
     }catch(err){
         console.log(err)
         res.status(400).send("Amenity Update Failed!")
+    }
+}
+
+export const getTags = async (req, res) => {
+    try{
+        let tags = await Tag.find().exec()
+        if(!tags) return res.status(400).send("No Tags Found!")
+        res.status(200).json(tags)
+    }catch(err){
+        console.log(err)
+        res.status(400).send("Error in Fetching Tags")
+    }
+}
+
+export const addTag = async (req, res) => {
+    let {auth, body} = req
+    const tagData = {
+        ...body,
+        createdBy: auth._id
+    }
+    const tag = new Tag(tagData)
+    try{
+        await tag.save()
+        let tags = await Tag.find().exec()
+        if(!tags) return res.status(400).send("No Tags Found!")
+        res.status(200).json(tags)
+    }catch(err){
+        res.status(400).send("Couldn't add Tag!")
+    }
+}
+
+export const deleteTag = async (req, res) => {
+    let {params} = req
+    try{
+        let props = await Property.find({tags: {$in: params.id}}).exec()
+        if(props){
+            props.forEach( async (element) => {
+                await Property.findByIdAndUpdate( element._id,{tags: [element.tags.filter((t) => t !== params.id)]})
+            });
+        }
+    }catch(err){
+        console.log(err)
+        res.status(400).send("Tag Delete Failed!")
     }
 }

@@ -33,6 +33,9 @@ const propertySchema = new Schema({
     },
     propertySetup: {
         amenities: [],
+        xFactor: {
+            type: String
+        },
         rules: {
             breakfast: {
                 type: Boolean,
@@ -94,6 +97,10 @@ const propertySchema = new Schema({
             type: Boolean,
             default: false
         }
+    },
+    tags: {
+        type: ObjectId,
+        ref: "Tag"
     },
     pricingCalendar: {
         pricePerNight: {

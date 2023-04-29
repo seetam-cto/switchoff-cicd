@@ -3,7 +3,7 @@ import { requireSignIn } from "../middlewares"
 import { 
     getPropertyTypes, addPropertyType, updatePropertyType,
     getAmenities, addAmenity, updateAmenity,
-    getExperiences, addExperience, updateExperience, deletePropertyType, deleteExperience
+    getExperiences, addExperience, updateExperience, deletePropertyType, deleteExperience, getTags, addTag
 } from "../controllers/attributes"
 
 const router = express.Router()
@@ -25,5 +25,9 @@ router.get("/attributes/amenity", getAmenities)
 router.post("/attributes/amenity/add", requireSignIn, addAmenity)
 router.put("/attributes/amenity/update/:id", requireSignIn, updateAmenity)
 // router.delete("/locations/delete/:id", requireSignIn, deleteLocation)
+
+//tags
+router.get("/attributes/tags", getTags)
+router.post("/attributes/tags/add", requireSignIn, addTag)
 
 module.exports = router
