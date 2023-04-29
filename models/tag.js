@@ -3,7 +3,10 @@ const {Schema} = mongoose
 const {ObjectId} = mongoose.Schema
 
 const tagSchema = new Schema({
-    tag: String,
+    tag: {
+        type: String,
+        unique: true
+    },
     createdBy: {
         type: ObjectId,
         ref: "User"
