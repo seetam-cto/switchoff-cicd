@@ -58,6 +58,14 @@ const homepageSettingsSchema = new Schema({
             ref: "Experience"
         }]
     },
+    promoPropsSection: [{
+        title: String,
+        subTitle: String,
+        list: [{
+            type: ObjectId,
+            ref: "Property"
+        }]
+    }],
     partners: {
         title: String,
         list: []

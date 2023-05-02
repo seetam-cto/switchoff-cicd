@@ -6,13 +6,6 @@ const amenitySchema = new Schema({
     title: {
         type: String
     },
-    for: {
-        type: String
-    },
-    exclusive: {
-        type: Boolean,
-        default: false
-    },
     icon: {
         type: String 
     },
@@ -22,6 +15,6 @@ const amenitySchema = new Schema({
     }
 }, {timestamps: true})
 
-amenitySchema.index({title: 1, for: 1}, {unique: true})
+amenitySchema.index({title: 1}, {unique: true})
 
 export default mongoose.model("Amenity", amenitySchema)
