@@ -79,6 +79,7 @@ export const getSettings = async (req, res) => {
             case "all":
                 let general = await SettingGeneral.find().limit(1)
                 let homepage = await SettingHomepage.find()
+                .populate("promoPropsSection.list")
                 .populate("experiences.list")
                 .populate("locations.list")
                 .limit(1)
