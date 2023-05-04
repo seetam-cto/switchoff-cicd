@@ -146,7 +146,6 @@ export const updateRoom = async (req, res) => {
         res.status(400).send("Room Update Failed!")
     }
 }
-
 export const deleteRoom = async (req, res) => {
     let {params} = req
     try{
@@ -157,7 +156,6 @@ export const deleteRoom = async (req, res) => {
         res.status(400).send("Room Update Failed!")
     }
 }
-
 export const getCalendar = async (req, res) => {
     try{
         let calendar = await Calender.find({roomId: req.params.roomId}).exec()
@@ -168,7 +166,6 @@ export const getCalendar = async (req, res) => {
         res.status(200).send("Error in fetching Calendar")
     }
 }
-
 export const handleRoomPrice = async (req, res) => {
     let {auth, body} = req
     console.log(body, req.params.roomId)
@@ -222,4 +219,20 @@ export const addTag = async (req, res) => {
 
 export const enquire = async (req, res) => {
     
+}
+
+export const rate = async (req, res) => {
+    let {params, auth} = req
+    try{
+        let property = await Property.findById(params.id)
+        let prevRatings = property.rating.length > 0 ? property.rating : []
+        if(prevRatings.filter((pr) => pr.createdBy === auth._id)) return res.status(400).send("Rating Exists!")
+        let updated = await Property.findByIdAndUpdate(params.id, {
+            rating: [prevRatings, {by: auth._id, rate: params.rate}]
+        }, {new: true})
+        res.status(200).json(updated)
+    }catch(err){
+        console.log(err)
+        res.status(400).send("Rate Property Failed!")
+    }
 }

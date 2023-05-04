@@ -163,6 +163,18 @@ const propertySchema = new Schema({
         default: false
     },
     status: String,
+    rating: [{
+        createdBy: {
+            type: ObjectId,
+            ref: "User"
+        },
+        rate: {
+            type: Number,
+            max: 5,
+            min: 1,
+            require: "Rating is required"
+        }
+    }],
     createdBy: {
         type: ObjectId,
         ref: "User"
