@@ -148,16 +148,20 @@ export const socialAuth = async (req, res) => {
                 user_type: usr.user_type
             }})
         }else{
-            let token = jwt.sign({_id: user._id}, process.env.JWT_SECRET, {
+            let updated = user[0]
+            if(!user.profile_image){
+                updated = await User.findByIdAndUpdate(user[0]._id, {profile_image}).exec()
+            }
+            let token = jwt.sign({_id: updated._id}, process.env.JWT_SECRET, {
                 expiresIn: '7d'
             })
             res.status(200).json({ token, user: {
-                _id: user[0]._id,
-                name: user[0].name,
-                email: user[0].email,
-                profile_image: user[0].profile_image,
-                phone_number: user[0].phone_number,
-                user_type: user[0].user_type
+                _id: updated._id,
+                name: updated.name,
+                email: updated.email,
+                profile_image: updated.profile_image,
+                phone_number: updated.phone_number,
+                user_type: updated.user_type
             }})
         }
     }catch(err){
