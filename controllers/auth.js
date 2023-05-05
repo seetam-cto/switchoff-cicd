@@ -4,6 +4,9 @@ import jwt from "jsonwebtoken"
 const sgMail = require('@sendgrid/mail')
 import crypto from "crypto"
 import bcrypt from "bcrypt"
+import {OAuth2Client} from 'google-auth-library'
+const client = new OAuth2Client(process.env.CLIENT_ID);
+
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 export const getAllUsers = async (req, res) => {
@@ -73,13 +76,13 @@ export const adminRegister = async (req, res) => {
 
 export const register = async (req, res) => {
     // console.log(req.body)
-    const {name, email, password} = req.body
+    const {email, password} = req.body
     //validation
     if(!email) return res.status(400).send('Email is required!')
     if(!password || password.length < 8) return res.status(400).send('Password is required and should be 8 characters long!')
     
     let userExists = await User.findOne({email: email})
-    if(userExists) return res.status(400).send('Account already exists')
+    if(userExists) return res.status(400).send('ACCOUNT_EXISTS')
 
     //register
     const user = new User({...req.body, user_type: "customer"})
@@ -89,7 +92,7 @@ export const register = async (req, res) => {
         return res.status(200).json({ok: true})
     }catch(err){
         console.log('CREATE USER FAILED: ', err)
-        return res.status(400).send('Error. Try Again.')
+        return res.status(400).send('ERROR_REGISTER')
     }
 }
 
@@ -125,19 +128,50 @@ export const adminLogin = async (req, res) => {
     }
 }
 
+export const socialAuth = async (req, res) => {
+    const {email, name, profile_image} = req.body
+    try{
+        let user = await User.find({email: email}).exec()
+        if(!user.length){
+            console.log("Registering User")
+            const usr = new User({email, password: "switchoff", user_type: "customer", name, profile_image})
+            await usr.save()
+            let token = jwt.sign({_id: usr._id}, process.env.JWT_SECRET, {
+                expiresIn: '7d'
+            })
+            return res.status(200).json({token, user: usr})
+        }else{
+            let token = jwt.sign({_id: user._id}, process.env.JWT_SECRET, {
+                expiresIn: '7d'
+            })
+            res.status(200).json({ token, user: {
+                _id: user[0]._id,
+                name: user[0].name,
+                email: user[0].email,
+                profile_image: user[0].profile_image,
+                phone_number: user[0].phone_number,
+                user_type: user[0].user_type
+            }})
+        }
+    }catch(err){
+        console.log(err)
+        res.status(400).send("ERROR_SOCIAL")
+    }
+}
+
 export const login = async (req, res) => {
     const {email, password} = req.body
     try{
         //check if email exists
         let user = await User.findOne({email: email}).exec()
         // console.log('User Exists', user)
-        if(!user) res.status(400).send(`User with email ${email} not found!`)
+        if(!user) res.status(400).send("NO_ACCOUNT")
         //check active
-        if(!user.active) res.status(400).send("Your Account has been deactivated!")
+        if(!user.active) res.status(400).send("DEACTIVATED_ACCOUNT")
         // Compare password
         user.comparePassword(password, (err, match) => {
             console.log('COMPARE PASSWORD IN LOGIN ERR', err)
-            if(!match || err) return res.status(400).send('Password doesn\'t match!')
+            if(!match || err) return res.status(400).send('WRONG_PASS')
             let token = jwt.sign({_id: user._id}, process.env.JWT_SECRET, {
                 expiresIn: '7d'
             })
@@ -155,7 +189,7 @@ export const login = async (req, res) => {
         
     }catch(err){
         console.log('Login Error: ', err)
-        res.status(400).send("Signin Failed!")
+        res.status(400).send("ERROR_LOGIN")
     }
 }
 

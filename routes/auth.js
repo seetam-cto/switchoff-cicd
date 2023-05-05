@@ -12,7 +12,8 @@ import {
     getAllUsers,
     adminRegister,
     vendorRegister,
-    vendorLogin
+    vendorLogin,
+    socialAuth
 } from "../controllers/auth"
 import { requireSignIn } from "../middlewares"
 
@@ -20,6 +21,7 @@ const router = express.Router()
 
 router.post('/register', register)
 router.post('/login', login)
+router.post('/login/social', socialAuth)
 router.post('/admin/login', adminLogin)
 
 //user interactions
