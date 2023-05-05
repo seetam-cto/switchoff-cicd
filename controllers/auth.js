@@ -89,7 +89,17 @@ export const register = async (req, res) => {
     try{
         await user.save()
         console.log('USER CREATED', user)
-        return res.status(200).json({ok: true})
+        let token = jwt.sign({_id: user._id}, process.env.JWT_SECRET, {
+            expiresIn: '7d'
+        })
+        return res.status(200).json({token, user: {
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            profile_image: user.profile_image,
+            phone_number: user.phone_number,
+            user_type: user.user_type
+        }})
     }catch(err){
         console.log('CREATE USER FAILED: ', err)
         return res.status(400).send('ERROR_REGISTER')
