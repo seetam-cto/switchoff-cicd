@@ -139,7 +139,14 @@ export const socialAuth = async (req, res) => {
             let token = jwt.sign({_id: usr._id}, process.env.JWT_SECRET, {
                 expiresIn: '7d'
             })
-            return res.status(200).json({token, user: usr})
+            return res.status(200).json({token, user: {
+                _id: usr._id,
+                name: usr.name,
+                email: usr.email,
+                profile_image: usr.profile_image,
+                phone_number: usr.phone_number,
+                user_type: usr.user_type
+            }})
         }else{
             let token = jwt.sign({_id: user._id}, process.env.JWT_SECRET, {
                 expiresIn: '7d'
