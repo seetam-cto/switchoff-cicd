@@ -236,3 +236,14 @@ export const rate = async (req, res) => {
         res.status(400).send("Rate Property Failed!")
     }
 }
+
+export const handleFavourites = async (req, res) => {
+    let {body, auth} = req
+    try{
+        let updated = await UserRefreshClient.findByIdAndUpdate(auth._id, {favourites: body.list}, {new: true})
+        res.status(200).json(updated)
+    }catch(err){
+        console.log(err)
+        res.status(400).send("Cannot Update favourites List!")
+    }
+}

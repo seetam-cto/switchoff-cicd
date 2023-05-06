@@ -1,5 +1,6 @@
 import mongoose from "mongoose"
 const {Schema} = mongoose
+const {ObjectId} = mongoose.Schema
 import bcrypt from "bcrypt"
 
 const userSchema = new Schema({
@@ -50,7 +51,11 @@ const userSchema = new Schema({
     active : {
         type: Boolean,
         default: true
-    }
+    },
+    favourites: [{
+        type: ObjectId,
+        ref: "Property"
+    }]
 }, {timestamps: true})
 
 userSchema.pre('save', function(next) {

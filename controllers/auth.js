@@ -98,7 +98,8 @@ export const register = async (req, res) => {
             email: user.email,
             profile_image: user.profile_image,
             phone_number: user.phone_number,
-            user_type: user.user_type
+            user_type: user.user_type,
+            favourites: user.favourites
         }})
     }catch(err){
         console.log('CREATE USER FAILED: ', err)
@@ -155,7 +156,8 @@ export const socialAuth = async (req, res) => {
                 email: usr.email,
                 profile_image: usr.profile_image,
                 phone_number: usr.phone_number,
-                user_type: usr.user_type
+                user_type: usr.user_type,
+                favourites: usr.favourites
             }})
         }else{
             let updated = user[0]
@@ -171,7 +173,8 @@ export const socialAuth = async (req, res) => {
                 email: updated.email,
                 profile_image: updated.profile_image,
                 phone_number: updated.phone_number,
-                user_type: updated.user_type
+                user_type: updated.user_type,
+                favourites: updated.favourites
             }})
         }
     }catch(err){
@@ -203,6 +206,7 @@ export const login = async (req, res) => {
                 phone_number: user.phone_number,
                 profile_image: user.profile_image,
                 user_type: user.user_type,
+                favourites: user.favourites,
                 createdAt: user.createdAt,
                 updatedAt: user.updatedAt
             } })

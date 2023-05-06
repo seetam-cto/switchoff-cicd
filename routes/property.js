@@ -4,7 +4,7 @@ import {
     getProperties, addProperty, updateProperty,
     getProperty, getRooms, addRoom, updateRoom, 
     getRoom, deleteProperty, deleteRoom, 
-    updatePropertyStatus, handleRoomPrice, getCalendar, rate
+    updatePropertyStatus, handleRoomPrice, getCalendar, rate, handleFavourites
 } from "../controllers/property"
 
 const router = express.Router()
@@ -17,6 +17,7 @@ router.put("/properties/update/:id", requireSignIn, propertyOwner, updatePropert
 router.put("/properties/status/:id", requireSignIn, propertyOwner, updatePropertyStatus)
 router.put('/properties/delete/:id', requireSignIn, propertyOwner, deleteProperty)
 router.post('/properties/rating/:id/:rate', requireSignIn, rate)
+router.post('/properties/favourites', requireSignIn, handleFavourites)
 
 //rooms
 router.get("/properties/:propertyId/rooms", getRooms)
