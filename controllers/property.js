@@ -2,7 +2,7 @@ import Property from "../models/property"
 import Room from "../models/room";
 import Calender from "../models/calender";
 import Tag from "../models/tag"
-import property from "../models/property";
+import User from "../models/user"
 
 export const getProperties = async (req, res) => {
     try{
@@ -240,8 +240,8 @@ export const rate = async (req, res) => {
 export const handleFavourites = async (req, res) => {
     let {body, auth} = req
     try{
-        let updated = await UserRefreshClient.findByIdAndUpdate(auth._id, {favourites: body.list}, {new: true})
-        res.status(200).json(updated)
+        let updated = await User.findByIdAndUpdate(auth._id, {favourites: body.list}, {new: true})
+        res.status(200).json(updated.favourites)
     }catch(err){
         console.log(err)
         res.status(400).send("Cannot Update favourites List!")
