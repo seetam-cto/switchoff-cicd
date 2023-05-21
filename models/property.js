@@ -26,6 +26,9 @@ const propertySchema = new Schema({
                 lng: String
             }
         },
+        xFactor: {
+            type: String
+        },
         status: {
             type: Boolean,
             default: true
@@ -33,9 +36,6 @@ const propertySchema = new Schema({
     },
     propertySetup: {
         amenities: [],
-        xFactor: {
-            type: String
-        },
         rules: {
             breakfast: {
                 type: Boolean,
