@@ -18,6 +18,20 @@ export const getProperties = async (req, res) => {
     }
 }
 
+export const getTrashProperties = async (req, res) => {
+    try{
+        let properties = await Property.find({deleted: true})
+        .populate("tags")
+        .populate("createdBy", "_id name email createdAt updatedAt")
+        .exec();
+        if(!properties) return res.status(400).send("No Properties Found!")
+        res.status(200).json(properties)
+    }catch(err){
+        console.log(err)
+        res.status(200).send("Error in Fetching Properties")
+    }
+}
+
 export const getProperty = async (req, res) => {
     try{
         let properties = await Property.findById(req.params.propertyId).exec();
@@ -83,6 +97,17 @@ export const deleteProperty = async (req, res) => {
     }catch(err){
         console.log(err)
         res.status(400).send("Property Delete Failed!")
+    }
+}
+
+export const restoreProperty = async (req, res) => {
+    let {params} = req
+    try{
+        let restored = await Property.findByIdAndUpdate(params.id, {deleted: false}, {new: true})
+        res.status(200).json(restored)
+    }catch(err){
+        console.log(err)
+        res.status(400).send("Property Restore Failed!")
     }
 }
 
@@ -156,6 +181,7 @@ export const deleteRoom = async (req, res) => {
         res.status(400).send("Room Update Failed!")
     }
 }
+
 export const getCalendar = async (req, res) => {
     try{
         let calendar = await Calender.find({roomId: req.params.roomId}).exec()
