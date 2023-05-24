@@ -29,6 +29,9 @@ const propertySchema = new Schema({
         xFactor: {
             type: String
         },
+        url: {
+            type: String,
+        },
         status: {
             type: Boolean,
             default: true

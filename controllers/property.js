@@ -1,6 +1,6 @@
 import Property from "../models/property"
-import Room from "../models/room";
-import Calender from "../models/calender";
+import Room from "../models/room"
+import Calender from "../models/calender"
 import Tag from "../models/tag"
 import User from "../models/user"
 
@@ -93,6 +93,17 @@ export const deleteProperty = async (req, res) => {
     let {params} = req
     try{
         let deleted = await Property.findByIdAndUpdate(params.id, {deleted: true}, {new: true})
+        res.status(200).json(deleted)
+    }catch(err){
+        console.log(err)
+        res.status(400).send("Property Delete Failed!")
+    }
+}
+
+export const deletePropertyFinal = async (req, res) => {
+    let {params} = req
+    try{
+        let deleted = await Property.findByIdAndDelete(params.id)
         res.status(200).json(deleted)
     }catch(err){
         console.log(err)

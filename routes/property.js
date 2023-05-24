@@ -2,9 +2,9 @@ import express from "express"
 import { requireSignIn, propertyOwner, roomOwner } from "../middlewares"
 import {
     getProperties, addProperty, updateProperty,
-    getProperty, getRooms, addRoom, updateRoom, 
-    getRoom, deleteProperty, deleteRoom, 
-    updatePropertyStatus, handleRoomPrice, getCalendar, rate, handleFavourites, getTrashProperties, restoreProperty
+    getProperty, getRooms, addRoom, updateRoom,
+    getRoom, deleteProperty, deleteRoom,
+    updatePropertyStatus, handleRoomPrice, getCalendar, rate, handleFavourites, getTrashProperties, restoreProperty, deletePropertyFinal
 } from "../controllers/property"
 
 const router = express.Router()
@@ -17,6 +17,7 @@ router.post("/properties/add", requireSignIn, addProperty)
 router.put("/properties/update/:id", requireSignIn, propertyOwner, updateProperty)
 router.put("/properties/status/:id", requireSignIn, propertyOwner, updatePropertyStatus)
 router.put('/properties/delete/:id', requireSignIn, propertyOwner, deleteProperty)
+router.put('/properties/deletefinal/:id', requireSignIn, propertyOwner, deletePropertyFinal)
 router.put('/properties/restore/:id', requireSignIn, propertyOwner, restoreProperty)
 router.post('/properties/rating/:id/:rate', requireSignIn, rate)
 router.post('/properties/favourites', requireSignIn, handleFavourites)
