@@ -4,7 +4,7 @@ import {
     getProperties, addProperty, updateProperty,
     getProperty, getRooms, addRoom, updateRoom,
     getRoom, deleteProperty, deleteRoom,
-    updatePropertyStatus, handleRoomPrice, getCalendar, rate, handleFavourites, getTrashProperties, restoreProperty, deletePropertyFinal, algoliaIndexing
+    updatePropertyStatus, handleRoomPrice, getCalendar, rate, handleFavourites, getTrashProperties, restoreProperty, deletePropertyFinal
 } from "../controllers/property"
 
 const router = express.Router()
