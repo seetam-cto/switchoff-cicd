@@ -28,6 +28,30 @@ export const getBlogs = async (req, res) => {
     }
 }
 
+export const getPublishedBlogs = async (req, res) => {
+    try{
+        let blogs = await Blog.find({status: 'published'})
+        .populate("properties")
+        .populate("experiences")
+        .populate("tags")
+        .populate("postedBy", "_id name email createdAt updatedAt")
+        .populate("content.editedBy", "_id name profile_image email createdAt updatedAt")
+        .select("-content.data")
+        .exec()
+        if(!blogs) return res.status(400).send("No Blogs Found!")
+        let result = blogs.map((blog) => {
+            return {
+                ...blog._doc,
+                content: blog.content.sort((a,b) => b.version - a.version)
+            }
+        })
+        res.status(200).json(result)
+    }catch(err){
+        console.log(err)
+        res.status(400).send("Error in fetching Blogs!")
+    }
+}
+
 export const getBlog = async (req, res) => {
     try{
         let blog = await Blog.findById(req.params.id)
