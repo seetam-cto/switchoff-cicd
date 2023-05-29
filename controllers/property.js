@@ -3,7 +3,7 @@ import Room from "../models/room"
 import Calender from "../models/calender"
 import Tag from "../models/tag"
 import User from "../models/user"
-import algoliasearch from "algoliasearch"
+// import algoliasearch from "algoliasearch"
 
 export const getProperties = async (req, res) => {
     try{
