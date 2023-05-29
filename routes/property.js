@@ -21,7 +21,7 @@ router.put('/properties/deletefinal/:id', requireSignIn, propertyOwner, deletePr
 router.put('/properties/restore/:id', requireSignIn, propertyOwner, restoreProperty)
 router.post('/properties/rating/:id/:rate', requireSignIn, rate)
 router.post('/properties/favourites', requireSignIn, handleFavourites)
-router.get('/properties/algolia/index', requireSignIn, algoliaIndexing)
+// router.get('/properties/algolia/index', requireSignIn, algoliaIndexing)
 
 //rooms
 router.get("/properties/:propertyId/rooms", getRooms)

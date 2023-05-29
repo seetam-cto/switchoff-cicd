@@ -286,28 +286,28 @@ export const handleFavourites = async (req, res) => {
     }
 }
 
-export const algoliaIndexing = async (req, res) => {
-    const client = algoliasearch(process.env.ALGOLIA_APP_ID, process.env.ALGOLIA_API_KEY)
-    const index = client.initIndex('switchoff')
-    try{
-        let properties = await Property.find({deleted: false})
-        .populate("tags")
-        .exec();
-        const objects = properties.map((p) => {return {
-            objectId: p._id,
-            name: p.nameLocation.name,
-            about: p.nameLocation.about,
-            address: p.nameLocation.address.fullAddress,
-            tags: p.tags && p.tags.length > 0 ? p.tags.map((t) => t.tag).join(" ") : '',
-            feature: p.nameLocation.xFactor,
-            budget: `budget under ${Math.round(p.pricingCalendar.pricePerNight/1000)*1000}`
-        }})
-        index.saveObjects(objects)
-        .then(({ objectIDs }) => {
-            console.log(objectIDs);
-        }).catch((err) => console.log(err))
-    }catch(err){
-        console.log(err)
-        res.status(400).send("Algolia: Indexing Failed!")
-    }
-}
+// export const algoliaIndexing = async (req, res) => {
+//     const client = algoliasearch(process.env.ALGOLIA_APP_ID, process.env.ALGOLIA_API_KEY)
+//     const index = client.initIndex('switchoff')
+//     try{
+//         let properties = await Property.find({deleted: false})
+//         .populate("tags")
+//         .exec();
+//         const objects = properties.map((p) => {return {
+//             objectId: p._id,
+//             name: p.nameLocation.name,
+//             about: p.nameLocation.about,
+//             address: p.nameLocation.address.fullAddress,
+//             tags: p.tags && p.tags.length > 0 ? p.tags.map((t) => t.tag).join(" ") : '',
+//             feature: p.nameLocation.xFactor,
+//             budget: `budget under ${Math.round(p.pricingCalendar.pricePerNight/1000)*1000}`
+//         }})
+//         index.saveObjects(objects)
+//         .then(({ objectIDs }) => {
+//             console.log(objectIDs);
+//         }).catch((err) => console.log(err))
+//     }catch(err){
+//         console.log(err)
+//         res.status(400).send("Algolia: Indexing Failed!")
+//     }
+// }
