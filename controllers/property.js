@@ -298,7 +298,7 @@ export const algoliaIndexing = async (req, res) => {
             name: p.nameLocation.name,
             about: p.nameLocation.about,
             address: p.nameLocation.address.fullAddress,
-            tags: p.tags.length > 0 ? p.tags.map((t) => t.tag).join(" ") : '',
+            tags: p.tags && p.tags.length > 0 ? p.tags.map((t) => t.tag).join(" ") : '',
             feature: p.nameLocation.xFactor,
             budget: `budget under ${Math.round(p.pricingCalendar.pricePerNight/1000)*1000}`
         }})
