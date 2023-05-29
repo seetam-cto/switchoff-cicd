@@ -37,6 +37,7 @@ export const getPublishedBlogs = async (req, res) => {
         .populate("postedBy", "_id name email createdAt updatedAt")
         .populate("content.editedBy", "_id name profile_image email createdAt updatedAt")
         .select("-content.data")
+        .sort({createdAt: -1})
         .exec()
         if(!blogs) return res.status(400).send("No Blogs Found!")
         let result = blogs.map((blog) => {
