@@ -26,6 +26,7 @@ const propertySchema = new Schema({
                 lng: String
             }
         },
+        mainAmenities: [],
         xFactor: {
             type: String
         },

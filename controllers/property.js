@@ -3,6 +3,7 @@ import Room from "../models/room"
 import Calender from "../models/calender"
 import Tag from "../models/tag"
 import User from "../models/user"
+import algoliasearch from "algoliasearch"
 
 export const getProperties = async (req, res) => {
     try{
@@ -282,5 +283,28 @@ export const handleFavourites = async (req, res) => {
     }catch(err){
         console.log(err)
         res.status(400).send("Cannot Update favourites List!")
+    }
+}
+
+export const algoliaIndexing = async (req, res) => {
+    const client = algoliasearch(process.env.ALGOLIA_APP_ID, process.env.ALGOLIA_API_KEY)
+    const index = client.initIndex('switchoff')
+    try{
+        let properties = await Property.find({deleted: false})
+        .populate("tags")
+        .exec();
+        const objects = properties.map((p) => {return {
+            objectId: p._id,
+            name: p.nameLocation.name,
+            about: p.nameLocation.about,
+            address: p.nameLocation.address.fullAddress,
+            tags: p.tags.length > 0 ? p.tags.map((t) => t.tag).join(" ") : '',
+            feature: p.nameLocation.xFactor,
+            budget: `budget under ${Math.round(p.pricingCalendar.pricePerNight/1000)*1000}`
+        }})
+        index.saveObjects(objects)
+    }catch(err){
+        console.log(err)
+        res.status(400).send("Algolia: Indexing Failed!")
     }
 }
