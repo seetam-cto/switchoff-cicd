@@ -303,6 +303,9 @@ export const algoliaIndexing = async (req, res) => {
             budget: `budget under ${Math.round(p.pricingCalendar.pricePerNight/1000)*1000}`
         }})
         index.saveObjects(objects)
+        .then(({ objectIDs }) => {
+            console.log(objectIDs);
+        }).catch((err) => console.log(err))
     }catch(err){
         console.log(err)
         res.status(400).send("Algolia: Indexing Failed!")
