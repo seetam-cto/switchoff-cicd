@@ -30,7 +30,7 @@ export const getBlogs = async (req, res) => {
 
 export const getPublishedBlogs = async (req, res) => {
     try{
-        let blogs = await Blog.find({status: 'published'})
+        let blogs = await Blog.find({published: true})
         .populate("properties")
         .populate("experiences")
         .populate("tags")
