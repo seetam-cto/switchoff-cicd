@@ -30,6 +30,7 @@ const propertySchema = new Schema({
         xFactor: {
             type: String
         },
+        tags: [],
         url: {
             type: String,
         },
@@ -101,10 +102,6 @@ const propertySchema = new Schema({
             type: Boolean,
             default: false
         }
-    },
-    tags: {
-        type: ObjectId,
-        ref: "Tag"
     },
     pricingCalendar: {
         pricePerNight: {
