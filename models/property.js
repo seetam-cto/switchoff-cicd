@@ -103,6 +103,10 @@ const propertySchema = new Schema({
             default: false
         }
     },
+    tags: {
+        type: ObjectId,
+        ref: "Tag"
+    },
     pricingCalendar: {
         pricePerNight: {
             type: Number
