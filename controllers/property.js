@@ -3,6 +3,7 @@ import Room from "../models/room"
 import Calender from "../models/calender"
 import Tag from "../models/tag"
 import User from "../models/user"
+import axios from "axios"
 // import algoliasearch from "algoliasearch"
 
 export const getProperties = async (req, res) => {
@@ -283,6 +284,42 @@ export const handleFavourites = async (req, res) => {
     }catch(err){
         console.log(err)
         res.status(400).send("Cannot Update favourites List!")
+    }
+}
+
+export const updateHoteId = async (req, res) => {
+    let {params} = req
+    const options1 = {
+        method: 'GET',
+        url: 'https://hotels-com-provider.p.rapidapi.com/v2/meta/convert/slug-id',
+        params: {slug: params.hotelslug},
+        headers: {
+          'X-RapidAPI-Key': process.env.HOTELS_KEY,
+          'X-RapidAPI-Host': process.env.HOTELS_APP
+        }
+    };
+    try{
+        const response1 = await axios.request(options1)
+        const options = {
+            method: 'GET',
+            url: 'https://hotels-com-provider.p.rapidapi.com/v2/hotels/details',
+            params: {
+                domain: 'IN',
+                locale: 'en_IN',
+                hotel_id: response1.data
+            },
+            headers: {
+                'X-RapidAPI-Key': process.env.HOTELS_KEY,
+                'X-RapidAPI-Host': process.env.HOTELS_APP
+            }
+          };
+        const response2 = await axios.request(options);
+        // let updated = await Property.findByIdAndUpdate(params.id, {hotelId: params.hotelid}, {new: true})
+        // res.status(200).json(updated.hotelId)
+        res.status(200).json(response2.data)
+    }catch(err){
+        console.log(err)
+        res.status(400).send("Cannot Update Hotel ID!")
     }
 }
 

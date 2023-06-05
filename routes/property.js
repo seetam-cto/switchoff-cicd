@@ -4,7 +4,9 @@ import {
     getProperties, addProperty, updateProperty,
     getProperty, getRooms, addRoom, updateRoom,
     getRoom, deleteProperty, deleteRoom,
-    updatePropertyStatus, handleRoomPrice, getCalendar, rate, handleFavourites, getTrashProperties, restoreProperty, deletePropertyFinal
+    updatePropertyStatus, handleRoomPrice, getCalendar, rate, 
+    handleFavourites, getTrashProperties, restoreProperty, 
+    deletePropertyFinal, updateHoteId
 } from "../controllers/property"
 
 const router = express.Router()
@@ -22,6 +24,7 @@ router.put('/properties/restore/:id', requireSignIn, propertyOwner, restorePrope
 router.post('/properties/rating/:id/:rate', requireSignIn, rate)
 router.post('/properties/favourites', requireSignIn, handleFavourites)
 // router.get('/properties/algolia/index', requireSignIn, algoliaIndexing)
+router.get('/properties/hotels/:id/:hotelslug', requireSignIn, updateHoteId)
 
 //rooms
 router.get("/properties/:propertyId/rooms", getRooms)
