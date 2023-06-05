@@ -3,7 +3,7 @@ import Room from "../models/room"
 import Calender from "../models/calender"
 import Tag from "../models/tag"
 import User from "../models/user"
-import fetch from "node-fetch";
+// import fetch from "node-fetch";
 // import algoliasearch from "algoliasearch"
 
 export const getProperties = async (req, res) => {
@@ -287,28 +287,28 @@ export const handleFavourites = async (req, res) => {
     }
 }
 
-export const updateHoteId = async (req, res) => {
-    let {params} = req
-    const url1 = 'https://hotels-com-provider.p.rapidapi.com/v2/meta/convert/slug-id?slug='+params.hotelslug;
-    const options = {
-        method: 'GET',
-        headers: {
-            'X-RapidAPI-Key': process.env.HOTELS_KEY,
-            'X-RapidAPI-Host': process.env.HOTELS_APP
-        }
-    };
-    try{
-        const response1 = await fetch(url1, options)
-        const url2 = 'https://hotels-com-provider.p.rapidapi.com/v2/hotels/details?domain=IN&locale=en_IN&hotel_id='+response1.data;
-        const response2 = await fetch(url2, options)
-        // let updated = await Property.findByIdAndUpdate(params.id, {hotelId: params.hotelid}, {new: true})
-        // res.status(200).json(updated.hotelId)
-        res.status(200).json(response2.data)
-    }catch(err){
-        console.log(err)
-        res.status(400).send("Cannot Update Hotel ID!")
-    }
-}
+// export const updateHoteId = async (req, res) => {
+//     let {params} = req
+//     const url1 = 'https://hotels-com-provider.p.rapidapi.com/v2/meta/convert/slug-id?slug='+params.hotelslug;
+//     const options = {
+//         method: 'GET',
+//         headers: {
+//             'X-RapidAPI-Key': process.env.HOTELS_KEY,
+//             'X-RapidAPI-Host': process.env.HOTELS_APP
+//         }
+//     };
+//     try{
+//         const response1 = await fetch(url1, options)
+//         const url2 = 'https://hotels-com-provider.p.rapidapi.com/v2/hotels/details?domain=IN&locale=en_IN&hotel_id='+response1.data;
+//         const response2 = await fetch(url2, options)
+//         // let updated = await Property.findByIdAndUpdate(params.id, {hotelId: params.hotelid}, {new: true})
+//         // res.status(200).json(updated.hotelId)
+//         res.status(200).json(response2.data)
+//     }catch(err){
+//         console.log(err)
+//         res.status(400).send("Cannot Update Hotel ID!")
+//     }
+// }
 
 // export const algoliaIndexing = async (req, res) => {
 //     const client = algoliasearch(process.env.ALGOLIA_APP_ID, process.env.ALGOLIA_API_KEY)
