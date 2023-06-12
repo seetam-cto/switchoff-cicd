@@ -41,6 +41,7 @@ const propertySchema = new Schema({
     },
     hotelId: String,
     hotelData: Object,
+    tripAdId: String,
     propertySetup: {
         amenities: [],
         rules: {
