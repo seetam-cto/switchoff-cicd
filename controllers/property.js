@@ -298,6 +298,17 @@ export const updateHoteId = async (req, res) => {
     }
 }
 
+export const updateTripAdId = async (req, res) => {
+    let {params, body} = req
+    try{
+        let updated = await Property.findByIdAndUpdate(params.id, {tripAdId: body.tripid}, {new: true})
+        res.status(200).json(updated)
+    }catch(err){
+        console.log(err)
+        res.status(400).send("Cannot Update Trip Advisor ID!")
+    }
+}
+
 // export const algoliaIndexing = async (req, res) => {
 //     const client = algoliasearch(process.env.ALGOLIA_APP_ID, process.env.ALGOLIA_API_KEY)
 //     const index = client.initIndex('switchoff')
