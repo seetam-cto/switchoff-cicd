@@ -17,7 +17,7 @@ mongoose
 //middlewares
 app.use(express.static(path.join(__dirname, '/frontend/build')))
 app.use('/media',express.static(path.join(__dirname, 'media')))
-app.use(cors({origin: ['https://admin.switchoff.in', 'https://switchoff.in', 'http://127.0.0.1:3000', 'http://localhost:3000', 'http://127.0.0.1:5173', 'http://localhost:5173' ]}))
+app.use(cors({origin: ['https://admin.switchoff.in', 'https://search.switchoff.in', 'https://switchoff.in', 'http://127.0.0.1:3000', 'http://localhost:3000', 'http://127.0.0.1:5173', 'http://localhost:5173' ]}))
 app.use(morgan("dev"))
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
