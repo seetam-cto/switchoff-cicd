@@ -21,6 +21,19 @@ export const getProperties = async (req, res) => {
     }
 }
 
+export const getPropertyNames = async (req, res) => {
+    try{
+        let properties = await Property.find({deleted: false})
+        .select("_id nameLocation.name")
+        .exec();
+        if(!properties) return res.status(400).send("No Properties Found!")
+        res.status(200).json(properties)
+    }catch(err){
+        console.log(err)
+        res.status(200).send("Error in Fetching Properties")
+    }
+}
+
 export const getTrashProperties = async (req, res) => {
     try{
         let properties = await Property.find({deleted: true})

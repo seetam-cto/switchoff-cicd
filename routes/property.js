@@ -6,7 +6,7 @@ import {
     getRoom, deleteProperty, deleteRoom,
     updatePropertyStatus, handleRoomPrice, getCalendar, rate, 
     handleFavourites, getTrashProperties, restoreProperty, 
-    deletePropertyFinal, updateHoteId, updateTripAdId, addManager, getManager, updateManager, deleteManager
+    deletePropertyFinal, updateHoteId, updateTripAdId, addManager, getManager, updateManager, deleteManager, getPropertyNames
 } from "../controllers/property"
 
 const router = express.Router()
@@ -19,6 +19,7 @@ router.delete("/properties/managers/:managerId", requireSignIn, isAdmin, deleteM
 
 //property
 router.get("/properties", getProperties)
+router.get("/properties/names", getPropertyNames)
 router.get("/properties/trashed", getTrashProperties)
 router.get("/property/:propertyId", getProperty)
 router.post("/properties/add", requireSignIn, addProperty)
