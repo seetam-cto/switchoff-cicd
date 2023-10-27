@@ -13,7 +13,8 @@ import {
     adminRegister,
     vendorRegister,
     vendorLogin,
-    socialAuth
+    socialAuth,
+    getManagerUsers
 } from "../controllers/auth"
 import { requireSignIn } from "../middlewares"
 
@@ -27,6 +28,7 @@ router.post('/admin/login', adminLogin)
 //user interactions
 router.post('/user/register',requireSignIn, adminRegister)
 router.get('/user/all', getAllUsers)
+router.get("/user/managers", getManagerUsers)
 router.post('/user/update/:id', requireSignIn, updateUser)
 router.put('/user/delete/:id', requireSignIn, deactivateUser)
 

@@ -24,6 +24,21 @@ export const getAllUsers = async (req, res) => {
     }
 }
 
+export const getManagerUsers = async (req, res) => {
+    try{
+        let users = await User.find({user_type: "manager"})
+        .select("-password")
+        .select("-passcode")
+        .select("-passchange")
+        .exec()
+        if(!users) return res.status(400).send("No Managers Found!")
+        res.status(200).json(users)
+    }catch(err){
+        console.log(err)
+        res.status(400).send("Error in fetching Managers!")
+    }
+}
+
 export const adminRegister = async (req, res) => {
     // console.log(req.body)
     const {name, email, user_type} = req.body
