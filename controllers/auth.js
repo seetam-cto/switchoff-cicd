@@ -26,7 +26,7 @@ export const getAllUsers = async (req, res) => {
 
 export const getManagerUsers = async (req, res) => {
     try{
-        let users = await User.find({user_type: "manager"})
+        let users = await User.find({user_type: {$in: ["manager", "vendor"]}})
         .select("-password")
         .select("-passcode")
         .select("-passchange")
