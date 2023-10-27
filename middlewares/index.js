@@ -1,5 +1,6 @@
 import {expressjwt} from "express-jwt"
 import Property from "../models/property"
+import Manager from "../models/property"
 import Room from "../models/room"
 import CMS from "../models/cms"
 import User from "../models/user"
@@ -14,8 +15,9 @@ export const requireSignIn = expressjwt({
 export const propertyOwner = async (req, res, next) => {
     let property = await Property.findById(req.params.id).exec()
     let user = await User.findById(req.auth._id)
-    let owner = property.createdBy.toString() == req.auth._id.toString() || user.user_type === "admin" || user.user_type === "editor"
-    if(!owner){
+    let manager_match = await Manager.find({property: req.params.id, current_manager: req.auth._id}).exec();
+    let owner =  property.createdBy.toString() == req.auth._id.toString() || user.user_type === "admin" || user.user_type === "editor"
+    if(!owner || manager_match.length == 0){
         return res.status(403).send("Unauthorized!")
     }
     next()
@@ -32,8 +34,9 @@ export const isAdmin = async (req, res, next) => {
 export const roomOwner = async (req, res, next) => {
     let room = await Room.findById(req.params.roomId).exec()
     let user = await User.findById(req.auth._id)
+    let manager_match = await Manager.find({property: room.propertyId, current_manager: req.auth._id})
     let owner = room.createdBy.toString() == req.auth._id.toString() || user.user_type === "admin" || user.user_type === "editor"
-    if(!owner){
+    if(!owner || manager_match.length == 0){
         return res.status(403).send("Unauthorized!")
     }
     next()

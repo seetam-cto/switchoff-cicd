@@ -3,6 +3,7 @@ import Room from "../models/room"
 import Calender from "../models/calender"
 import Tag from "../models/tag"
 import User from "../models/user"
+import Manager from "../models/manager"
 // import fetch from "node-fetch";
 // import algoliasearch from "algoliasearch"
 
@@ -245,7 +246,7 @@ export const addTag = async (req, res) => {
     const tag = new Tag(tagData)
     try{
         await tag.save()
-        return res.status(200).json(property)
+        return res.status(200).json(tag)
     }catch(err){
         console.log(err)
         if(err.code == 11000){
@@ -306,6 +307,60 @@ export const updateTripAdId = async (req, res) => {
     }catch(err){
         console.log(err)
         res.status(400).send("Cannot Update Trip Advisor ID!")
+    }
+}
+
+export const addManager = async (req, res) => {
+    let {auth, body} = req
+    const managerData = {
+        ...body,
+        createdBy: auth._id
+    }
+    const manager = new Manager(managerData)
+    try{
+        await manager.save()
+        return res.status(200).json(manager)
+    }catch(err){
+        console.log(err)
+        res.status(400).send("Couldn't add Tag!")
+    }
+}
+
+export const getManager = async (req, res) => {
+    try{
+        let managers;
+        if(req.params.property == "all"){
+            managers = await Manager.find().exec();
+        }else{
+            managers = await Manager.find({property: req.params.property}).exec();
+        }
+        if(!managers) return res.status(400).send("Managers Not Found!")
+        res.status(200).json(managers)
+    }catch(err){
+        console.log(err)
+        res.status(400).send("Error in fetching Managers")
+    }
+}
+
+export const updateManager = async (req, res) => {
+    let {body, params} = req
+    try{
+        let updated = await Manager.findByIdAndUpdate(params.managerId, body, {new: true})
+        res.status(200).json(updated)
+    }catch(err){
+        console.log(err)
+        res.status(400).send("Manager update Failed!")
+    }
+}
+
+export const deleteManager = async (req, res) => {
+    let {params} = req
+    try{
+        let deleted = await Manager.findByIdAndUpdate(params.managerId, {active: false}, {new: true})
+        res.status(200).json(deleted)
+    }catch(err){
+        console.log(err)
+        res.status(400).send("Manager Delete Failed!")
     }
 }
 

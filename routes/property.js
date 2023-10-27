@@ -1,15 +1,21 @@
 import express from "express"
-import { requireSignIn, propertyOwner, roomOwner } from "../middlewares"
+import { requireSignIn, propertyOwner, roomOwner, isAdmin } from "../middlewares"
 import {
     getProperties, addProperty, updateProperty,
     getProperty, getRooms, addRoom, updateRoom,
     getRoom, deleteProperty, deleteRoom,
     updatePropertyStatus, handleRoomPrice, getCalendar, rate, 
     handleFavourites, getTrashProperties, restoreProperty, 
-    deletePropertyFinal, updateHoteId, updateTripAdId
+    deletePropertyFinal, updateHoteId, updateTripAdId, addManager, getManager, updateManager, deleteManager
 } from "../controllers/property"
 
 const router = express.Router()
+
+//manager
+router.get("/properties/managers/:property", requireSignIn, isAdmin, getManager)
+router.post("/properties/managers", requireSignIn, isAdmin, addManager)
+router.put("/properties/managers/:managerId", requireSignIn, isAdmin, updateManager)
+router.delete("/properties/managers/:managerId", requireSignIn, isAdmin, deleteManager)
 
 //property
 router.get("/properties", getProperties)
