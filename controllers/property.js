@@ -330,7 +330,10 @@ export const getManager = async (req, res) => {
     try{
         let managers;
         if(req.params.property == "all"){
-            managers = await Manager.find().exec();
+            managers = await Manager.find()
+            .populate("current_manager", "_id name")
+            .populate("property", "_id nameLocation.name")
+            .exec();
         }else{
             managers = await Manager.find({property: req.params.property}).exec();
         }
