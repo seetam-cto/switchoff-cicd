@@ -19,7 +19,7 @@ router.delete("/properties/managers/:managerId", requireSignIn, isAdmin, deleteM
 
 //property
 router.get("/properties", getProperties)
-router.get("/properties/managed", getManagerProperties)
+router.get("/properties/managed/:managerId", getManagerProperties)
 router.get("/properties/names", getPropertyNames)
 router.get("/properties/trashed", getTrashProperties)
 router.get("/property/:propertyId", getProperty)
