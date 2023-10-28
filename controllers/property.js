@@ -23,13 +23,14 @@ export const getProperties = async (req, res) => {
 
 export const getManagerProperties = async (req, res) => {
     let managerId = req.params.managerId
+    let status = new Boolean(req.params.status)
     try{
         let managerprops = await Manager.find({current_manager: managerId})
         .select("properties")
         .select("-_id")
         .exec();
         let combined = [...new Set(managerprops.flatMap(item => item.properties))]
-        let properties = await Property.find({_id: {$in : combined}, deleted: false})
+        let properties = await Property.find({_id: {$in : combined}, deleted: status == "true"})
         .populate("tags")
         .populate("createdBy", "_id name email createdAt updatedAt")
         .exec();
