@@ -9,8 +9,7 @@ const managerSchema = new Schema({
     }],
     current_manager: {
         type: ObjectId,
-        ref: "User",
-        unique: true
+        ref: "User"
     },
     past_managers: [{
         type: ObjectId,
@@ -29,7 +28,5 @@ const managerSchema = new Schema({
         ref: "User"
     }
 }, {timestamps: true})
-
-managerSchema.index({ current_manager: 1}, { unique: true });
 
 export default mongoose.model("Manager", managerSchema)
