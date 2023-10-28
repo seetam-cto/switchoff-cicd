@@ -334,8 +334,12 @@ export const addManager = async (req, res) => {
         await manager.save()
         return res.status(200).json(manager)
     }catch(err){
-        console.log(err)
-        res.status(400).send("Couldn't add Tag!")
+        if(err.code === 11000){
+            res.status(400).send("Records for this manager already exists!")
+        }else{
+            console.log(err)
+            res.status(400).send("Couldn't Add Manager")
+        }
     }
 }
 
