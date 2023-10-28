@@ -23,7 +23,7 @@ export const getProperties = async (req, res) => {
 
 export const getManagerProperties = async (req, res) => {
     let managerId = req.params.managerId
-    let status = new Boolean(req.params.status)
+    let status = req.params.status
     try{
         let managerprops = await Manager.find({current_manager: managerId})
         .select("properties")
