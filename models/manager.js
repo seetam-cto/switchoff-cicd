@@ -15,6 +15,9 @@ const managerSchema = new Schema({
         type: ObjectId,
         ref: "User"
     }],
+    designation: {
+        type: String
+    },
     access: [String],
     active: {
         type: Boolean,
