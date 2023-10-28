@@ -82,7 +82,7 @@ export const adminRegister = async (req, res) => {
         })
 
         console.log('USER CREATED', user)
-        return res.status(200).json({ok: true})
+        return res.status(200).json({ok: true, user: {_id: user._id}})
     }catch(err){
         console.log('CREATE USER FAILED: ', err)
         return res.status(400).send('Error. Try Again.')
