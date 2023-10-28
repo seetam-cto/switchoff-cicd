@@ -29,7 +29,10 @@ export const getManagerProperties = async (req, res) => {
         .select("-_id")
         .exec();
         let combined = [...new Set(managerprops.flatMap(item => item.properties))]
-        let properties = await Property.find({_id: {$in : combined}})
+        let properties = await Property.find({_id: {$in : combined}, deleted: false})
+        .populate("tags")
+        .populate("createdBy", "_id name email createdAt updatedAt")
+        .exec();
         if(!properties) return res.status(400).send("No Properties Found!")
         res.status(200).json(properties)
     }catch(err){
