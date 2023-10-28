@@ -17,7 +17,24 @@ export const getProperties = async (req, res) => {
         res.status(200).json(properties)
     }catch(err){
         console.log(err)
-        res.status(200).send("Error in Fetching Properties")
+        res.status(400).send("Error in Fetching Properties")
+    }
+}
+
+export const getManagerProperties = async (req, res) => {
+    let managerId = req.params.managerId
+    try{
+        let managerprops = await Manager.find({current_manager: managerId})
+        .select("properties")
+        .select("-_id")
+        .exec();
+        let combined = [...new Set(managerprops.flatMap(item => item.properties))]
+        let properties = await Property.find({_id: {$in : combined}})
+        if(!properties) return res.status(400).send("No Properties Found!")
+        res.status(200).json(properties)
+    }catch(err){
+        console.log(err)
+        res.status(400).send("Error in Fetching Properties!")
     }
 }
 
