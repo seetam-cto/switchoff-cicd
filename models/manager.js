@@ -3,10 +3,10 @@ const {Schema} = mongoose
 const {ObjectId} = mongoose.Schema
 
 const managerSchema = new Schema({
-    property: {
+    properties: [{
         type: ObjectId,
         ref: "Property"
-    },
+    }],
     current_manager: {
         type: ObjectId,
         ref: "User"
