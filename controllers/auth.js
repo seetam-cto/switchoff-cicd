@@ -126,9 +126,9 @@ export const adminLogin = async (req, res) => {
     const {email, password} = req.body
     try{
         //check if email exists
-        let user = await User.findOne({email: email, user_type: {$in: ["admin","editor"]}}).exec()
+        let user = await User.findOne({email: email, user_type: {$in: ["admin","editor","manager","vendor"]}}).exec()
         // console.log('User Exists', user)
-        if(!user) return res.status(400).send(`Admin/Editor with email ${email} not found!`)
+        if(!user) return res.status(400).send(`User with email ${email} not found!`)
         // Compare password
         user.comparePassword(password, (err, match) => {
             console.log('COMPARE PASSWORD IN LOGIN ERR', err)
