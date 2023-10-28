@@ -9,7 +9,8 @@ const managerSchema = new Schema({
     }],
     current_manager: {
         type: ObjectId,
-        ref: "User"
+        ref: "User",
+        unique: true
     },
     past_managers: [{
         type: ObjectId,
