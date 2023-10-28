@@ -338,7 +338,7 @@ export const addManager = async (req, res) => {
             res.status(400).send("Records for this manager already exists!")
         }else{
             console.log(err)
-            res.status(400).send("Couldn't Add Manager")
+            res.status(400).send("Couldn't Add Manager").json(err)
         }
     }
 }
