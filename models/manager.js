@@ -29,4 +29,6 @@ const managerSchema = new Schema({
     }
 }, {timestamps: true})
 
+managerSchema.index({ current_manager: 1}, { unique: true });
+
 export default mongoose.model("Manager", managerSchema)
