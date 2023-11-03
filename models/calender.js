@@ -1,3 +1,7 @@
+import mongoose from "mongoose"
+const {Schema} = mongoose
+const {ObjectId} = mongoose.Schema
+
 const calendarSchema = new Schema({
     date: {
       type: Date,
