@@ -8,3 +8,5 @@ const router = express.Router()
 
 //Fetch Inventory
 router.post("/engine/inventory", fetchInventory)
+
+module.exports = router
