@@ -64,7 +64,7 @@ export const fetchInventory = async (req, res) => {
         let calendar = await Calender.find(query)
         .select("-createdBy")
         .exec()
-        if(calendar.legth == 0) return res.status(400).json({
+        if(calendar.length == 0) return res.status(400).json({
             status: "Failure",
             message: "No Inventory Found!"
         })
